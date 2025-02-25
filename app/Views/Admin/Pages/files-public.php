@@ -110,6 +110,19 @@
         <?php if ($ishome): ?>
             <div class="row m-0 p-0">
                 <h6>System Public Files</h6>
+                <?php if (empty($folders['systemfolders'])): ?>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body d-flex justify-content-center align-items-center">
+                                <div class="text-center fst-italic my-5">
+                                    <h3>No Folder/s Available</h3>
+                                    <p class="m-0">No system public files available.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <?php foreach ($folders['systemfolders'] as $index => $folder): ?>
                     <?php if ($index <= 8): ?>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
@@ -146,7 +159,19 @@
 
             <div class="row my-3 mx-0 p-0">
                 <h6>Most Visited</h6>
-                <?php $mostviewdfoldercount = 0 ?>
+                <?php if (empty($folders['publicandrestrictedfolders'])): ?>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body d-flex justify-content-center align-items-center">
+                                <div class="text-center fst-italic my-5">
+                                    <h3>No Folder/s Available</h3>
+                                    <p class="m-0">No public files available.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <?php foreach ($folders['publicandrestrictedfolders'] as $index => $folder): ?>
                     <?php if ($index <= 8): ?>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
@@ -492,7 +517,7 @@
 
 <script>
     // [ Radio Buttons ]
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         function setupRadioListeners(modalId) {
             const modal = document.getElementById(modalId);
             if (!modal) return;
@@ -502,7 +527,7 @@
 
             if (accessRadioButtons && noteText) {
                 accessRadioButtons.forEach((radio) => {
-                    radio.addEventListener('change', function() {
+                    radio.addEventListener('change', function () {
                         if (this.value == 1) {
                             noteText.textContent = "Note: Everyone can access this folder.";
                         } else if (this.value == 2) {
@@ -518,8 +543,8 @@
         setupRadioListeners('editFolder');
         setupRadioListeners('findfolder');
 
-        document.querySelectorAll('a[data-folder-name]').forEach(function(anchor) {
-            anchor.addEventListener('click', function(event) {
+        document.querySelectorAll('a[data-folder-name]').forEach(function (anchor) {
+            anchor.addEventListener('click', function (event) {
                 event.preventDefault();
 
                 const folderid = this.getAttribute('data-folder-id')
@@ -555,8 +580,8 @@
     });
 
     // [ Share Folder ]
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('share-folder-button').addEventListener('click', function(event) {
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('share-folder-button').addEventListener('click', function (event) {
             const foldercode = this.getAttribute('data-folder-code');
             const modalFolderCode = document.getElementById('share-folder-code');
 
@@ -639,12 +664,12 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const viewLinks = document.querySelectorAll('[data-bs-target="#viewPDF"]');
         const modalIframe = document.getElementById('modal-pdf-file');
 
         viewLinks.forEach(link => {
-            link.addEventListener('click', function(event) {
+            link.addEventListener('click', function (event) {
                 event.preventDefault();
                 const filePath = this.getAttribute('data-path');
                 modalIframe.src = filePath;

@@ -74,7 +74,7 @@
                         <span class="pc-micon">
                             <i class="ti ti-folder"></i>
                         </span>
-                        <span class="pc-mtext">Public Files</span>
+                        <span class="pc-mtext">Employee Files</span>
                     </a>
                 </li>
 

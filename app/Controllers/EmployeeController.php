@@ -1490,6 +1490,7 @@ class EmployeeController extends BaseController
         $rqst_address = $this->request->getPost('admn_address');
         $rqst_gender = $this->request->getPost('admn_gender');
         $rqst_birthdate = $this->request->getPost('admn_birthdate');
+        $rqst_degree = $this->request->getPost('admn_degree');
         $rqst_accountid = $this->request->getPost('account_id');
 
         $validation = \Config\Services::validation();
@@ -1547,11 +1548,16 @@ class EmployeeController extends BaseController
             ],
             'admn_gender' => [
                 'label' => 'Gender',
-                'rules' => 'required|alpha_space|max_length[255]',
+                'rules' => 'required',
                 'errors' => [
                     'required' => 'Gender field is required.',
-                    'alpha_space' => 'Gender cannot contain special characters or numbers.',
-                    'max_length' => 'Gender is too long; it must be 255 characters or fewer.'
+                ],
+            ],
+            'admn_degree' => [
+                'label' => 'Degree',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Degree field is required.',
                 ],
             ],
         ];
@@ -1565,8 +1571,12 @@ class EmployeeController extends BaseController
             return redirect()->to('/EmployeeController/AccountProfilePage');
         }
 
+        $initial = $rqst_middlename ? strtoupper($rqst_middlename[0]) . '.' : '';
+        $fullname = ucwords(strtolower("$rqst_firstname $initial $rqst_lastname ")) . "$rqst_extension";
+
         $accountData = [
             'account_id' => $rqst_accountid,
+            'full_name' => $fullname,
             'first_name' => $rqst_firstname,
             'last_name' => $rqst_lastname,
             'middle_name' => $rqst_middlename,
@@ -1575,6 +1585,7 @@ class EmployeeController extends BaseController
             'mobile_number' => $rqst_mobilenumber,
             'sex' => $rqst_gender,
             'birthdate' => $rqst_birthdate,
+            'degree_id' => $rqst_degree,
         ];
         $accountModel = new AccountsModel();
         $accountModel->save($accountData);
@@ -1599,8 +1610,13 @@ class EmployeeController extends BaseController
         }
 
         if ($rqst_profilepicture && $rqst_profilepicture->isValid() && !$rqst_profilepicture->hasMoved()) {
-            $profile_name = $rqst_profilepicture->getRandomName();
+            $profile_name = $profile_name = $this->data['user']['id_number'] . '.' . $rqst_profilepicture->getClientExtension();
             $profile_path = "$img_path/$profile_name";
+            $full_path = $directoryPath . '/' . $profile_name;
+
+            if (file_exists($full_path)) {
+                unlink($full_path); // Remove old file
+            }
 
             $rqst_profilepicture->move($directoryPath, $profile_name);
 
@@ -1676,6 +1692,7 @@ class EmployeeController extends BaseController
         return redirect()->to('/EmployeeController/AccountProfilePage');
     }
 
+
     public function RedirectToChangePassword()
     {
         session()->setFlashdata('passwordFormData', [
@@ -1683,8 +1700,6 @@ class EmployeeController extends BaseController
         ]);
         return redirect()->to('/EmployeeController/AccountProfilePage#change-password');
     }
-
-
     public function RedirectToProfileUpdate()
     {
         session()->setFlashdata('passwordFormData', [

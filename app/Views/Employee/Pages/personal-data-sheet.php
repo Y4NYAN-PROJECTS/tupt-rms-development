@@ -511,12 +511,12 @@
 
                                 <h5>Mother - Maiden Name</h5>
                                 <div class="col-sm-12 col-md-12 col-lg-12 mb-3">
-                                    <label class="form-label" for="form-mthrln">Maiden Name</label>
+                                    <label class="form-label" for="form-mthrln">Maiden Name <small class="form-text text-muted">(Given name)</small></label>
                                     <input type="text" class="form-control" id="form-mthrln" name="fmly_mother_maidenname" placeholder="Maiden Name" value="<?= $checkfamily ? $family['mother_maiden_name'] : '' ?>">
                                 </div>
 
                                 <div class="col-sm-12 col-md-4 col-lg-4 mb-3">
-                                    <label class="form-label" for="form-mthrln">Last Name</label>
+                                    <label class="form-label" for="form-mthrln">Last Name <small class="form-text text-muted">(Married surname)</small></label>
                                     <input type="text" class="form-control" id="form-mthrln" name="fmly_mother_lastname" placeholder="Last Name" value="<?= $checkfamily ? $family['mother_last_name'] : '' ?>">
                                 </div>
 

@@ -2012,67 +2012,52 @@ class AdminController extends BaseController
         return redirect()->to('/AdminController/AccountProfilePage');
     }
 
-    public function ChangeEmailOTP()
-    {
-        $rqst = $this->request->getPost();
-        $rqst_email = $this->request->getPost('admn_newemail');
+    // public function ChangeEmailOTP()
+    // {
+    //     $rqst = $this->request->getPost();
+    //     $rqst_email = $this->request->getPost('admn_newemail');
 
-        $code = $this->GenerateCode();
+    //     $code = $this->GenerateCode();
 
-        $emailsubject = 'Change Email Confirmation Code';
-        $templatePath = APPPATH . '/Views/EmailTemplates/change-email-otp.html';
-        $emailmessage = file_get_contents($templatePath);
-        $emailmessage = str_replace('{{otp_code}}', $code, $emailmessage);
+    //     $emailsubject = 'Change Email Confirmation Code';
+    //     $templatePath = APPPATH . '/Views/EmailTemplates/change-email-otp.html';
+    //     $emailmessage = file_get_contents($templatePath);
+    //     $emailmessage = str_replace('{{otp_code}}', $code, $emailmessage);
 
-        $emailService = \Config\Services::email();
-        $emailService->setTo($rqst_email);
-        $emailService->setSubject($emailsubject);
-        $emailService->setMessage($emailmessage);
+    //     $emailService = \Config\Services::email();
+    //     $emailService->setTo($rqst_email);
+    //     $emailService->setSubject($emailsubject);
+    //     $emailService->setMessage($emailmessage);
 
-        if ($emailService->send()) {
-            $datetime = $this->data['datenow'];
-            $timenow = $this->data['timenow_stamp'];
+    //     if ($emailService->send()) {
+    //         $datetime = $this->data['datenow'];
+    //         $timenow = $this->data['timenow_stamp'];
 
-            $otpModel = new OtpModel();
-            $otpData = [
-                'email_address' => $rqst_email,
-                'otp_code' => $code,
-                'date_created' => $datetime,
-            ];
-            $otpModel->insert($otpData);
+    //         $otpModel = new OtpModel();
+    //         $otpData = [
+    //             'email_address' => $rqst_email,
+    //             'otp_code' => $code,
+    //             'date_created' => $datetime,
+    //         ];
+    //         $otpModel->insert($otpData);
 
-            $sessionData = [
-                's_emailchange' => true,
-                's_otpcode' => $code,
-                's_otptime' => $timenow,
-                's_email' => $rqst_email,
-            ];
-            session()->set($sessionData);
+    //         $sessionData = [
+    //             's_emailchange' => true,
+    //             's_otpcode' => $code,
+    //             's_otptime' => $timenow,
+    //             's_email' => $rqst_email,
+    //         ];
+    //         session()->set($sessionData);
 
-            return $this->response->setJSON(['success' => true, 'message' => 'otp sent.']);
-        } else {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Failed to send email. Please contact support.',
-                'debug' => $emailService->printDebugger(['headers']),
-            ]);
-        }
-    }
-
-
-    public function GenerateCode()
-    {
-        $length = 12;
-        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $code = '';
-
-        for ($i = 0; $i < $length; $i++) {
-            $code .= $characters[random_int(0, strlen($characters) - 1)];
-        }
-
-        return $code;
-    }
-
+    //         return $this->response->setJSON(['success' => true, 'message' => 'otp sent.']);
+    //     } else {
+    //         return $this->response->setJSON([
+    //             'success' => false,
+    //             'message' => 'Failed to send email. Please contact support.',
+    //             'debug' => $emailService->printDebugger(['headers']),
+    //         ]);
+    //     }
+    // }
 
     public function RedirectToChangePassword()
     {
@@ -2097,6 +2082,21 @@ class AdminController extends BaseController
             'tab' => 'myaccount'
         ]);
         return redirect()->to('/AdminController/AccountProfilePage#change-email');
+    }
+
+
+    // [ More Functions ]
+    public function GenerateCode()
+    {
+        $length = 12;
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $code = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $code .= $characters[random_int(0, strlen($characters) - 1)];
+        }
+
+        return $code;
     }
 
     public function RemoveChangeEmailSessions()

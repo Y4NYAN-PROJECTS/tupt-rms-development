@@ -8,7 +8,7 @@
             <!-- [ Breadcrumbs ] -->
             <div class="col-md-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/Employee/DashboardPage">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
                     <li class="breadcrumb-item"><a href="">Profile</a></li>
                 </ul>
             </div>
@@ -79,13 +79,18 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-6 col-md-12 col-lg-6 mb-3">
                                         <small class="mb-1 text-muted">User type</small>
-                                        <p class="mb-0"><?= $user['user_type'] == 1 ? 'Administrator' : 'Employee' ?>
+                                        <p class="mb-0"><?= $user['user_type'] == 1 ? 'Employeeistrator' : 'Employee' ?>
                                         </p>
                                     </div>
 
                                     <div class="col-12 col-sm-6 col-md-12 col-lg-6 mb-3">
                                         <small class="mb-1 text-muted">Plantilla</small>
                                         <p class="mb-0"><?= $user['plantilla_title'] ?></p>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
+                                        <small class="mb-1 text-muted">Degree</small>
+                                        <p class="mb-0"><?= $user['degree_title'] ?? '-' ?></p>
                                     </div>
 
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
@@ -203,6 +208,10 @@
                     $extensionSelect = $isProfileSubmitted ? $oldinput['admn_extension'] : $user['extension_name'];
                     $extensionError = $isProfileSubmitted && $validation->hasError('admn_extension');
                     $extensionClass = $extensionError ? 'is-invalid' : '';
+
+                    $degreeSelect = $isProfileSubmitted ? $oldinput['admn_degree'] : $user['degree_id'];
+                    $degreeError = $isProfileSubmitted && $validation->hasError('admn_degree');
+                    $degreeClass = $degreeError ? 'is-invalid' : '';
 
                     ?>
 
@@ -325,13 +334,34 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label class="form-label">Birth Date <span class="text-danger">*</span></label>
                                                 <input type="date" max="<?= $datenow ?>" class="form-control <?= ($form == 'profileform') && $validation->hasError('admn_birthdate') ? 'is-invalid' : '' ?>" name="admn_birthdate" value="<?= ($form == 'profileform') ? $oldinput['admn_birthdate'] : $user['birthdate']; ?>">
                                                 <?php if (($form == 'profileform') && $validation->hasError('admn_birthdate')): ?>
                                                     <div class="invalid-feedback">
                                                         <?= $validation->getError('admn_birthdate') ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-label">Degree <span class="text-danger">*</span></label>
+                                                <select name="admn_degree" id="degree" class="form-control <?= $degreeClass ?>">
+                                                    <option value="">N/A</option>
+                                                    <?php foreach ($degrees as $degree): ?>
+                                                        <?php $isSelected = $degreeSelect == $degree['degree_id'] ? 'selected' : ''; ?>
+                                                        <option value="<?= $degree['degree_id']; ?>" <?= $isSelected ?>>
+                                                            <?= $degree['degree_title']; ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+
+                                                <?php if (($form == 'profileform') && $validation->hasError('admn_degree')): ?>
+                                                    <div class="invalid-feedback">
+                                                        <?= $validation->getError('admn_degree') ?>
                                                     </div>
                                                 <?php endif; ?>
                                             </div>
@@ -450,7 +480,7 @@
                                         <div class="form-group">
                                             <label class="form-label" for="admn_confirmationcode">Confirmation Code
                                                 <span class="text-danger">*</span></label>
-                                            <input type="password" id="admn_confirmationcode" class="form-control " placeholder="12 Character Confirmation Code" value="">
+                                            <input type="password" id="admn_confirmationcode" class="form-control" placeholder="12 Character Confirmation Code" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -479,9 +509,9 @@
                     <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <form action="/Employee/UploadProfilePicture" method="post" enctype="multipart/form-data">
+                <form action="/EmployeeController/UploadProfilePicture" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
-                        <input type="file" class="image-crop-filepond" data-allow-reorder="true" data-max-file-size="10MB" name="admn_profile_picture">
+                        <input type="file" class="image-crop-filepond" name="admn_profile_picture" data-max-file-size="10MB" data-allow-image-preview="true" data-allow-image-crop="true" data-image-crop-aspect-ratio="1:1">
                     </div>
 
                     <div class="modal-footer justify-content-center">
@@ -491,9 +521,42 @@
             </div>
         </div>
     </div>
-    <!-- [ sample-page ] end -->
 </div>
 
+<script>
+    // Register plugins
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+        FilePondPluginImageCrop,
+        FilePondPluginImageResize,
+        FilePondPluginImageTransform
+    );
+
+    // Initialize FilePond
+    const pond = FilePond.create(document.querySelector('.image-crop-filepond'), {
+        allowImageCrop: true,
+        imageCropAspectRatio: '1:1',
+
+        allowImageResize: true,
+        imageResizeTargetWidth: 500,
+        imageResizeTargetHeight: 500,
+
+        allowImageTransform: true,
+
+        // Ensures only the cropped & resized version is uploaded
+        imageTransformVariants: {
+            'cropped': (transforms) => {
+                transforms.resize = {
+                    size: { width: 500, height: 500 },
+                };
+                return transforms;
+            }
+        },
+        imageTransformOutputMimeType: 'image/jpeg',
+        imageTransformOutputQuality: 1
+    });
+
+</script>
 
 
 <script>
@@ -530,7 +593,7 @@
 
     //     let ongoingChangeEmail = <?= session()->get('s_emailchange') ? 'true' : 'false' ?>;
     //     let expirationTime = <?= session()->get('s_otptime') ?? '0' ?> + 300; // OTP valid for 5 minutes
-    //     let currentTime = <?= $timenow_stamp ?>;
+    //     let currentTime = <?= $timenow ?>;
 
     //     const startCountdown = (remainingTime) => {
     //         const countdown = () => {
@@ -574,36 +637,36 @@
     //         });
     //     }
 
-    //     // Event listener for sending OTP
-    //     if (sendcodeButton) {
-    //         sendcodeButton.addEventListener("click", function () {
-    //             sendcodeButton.disabled = true;
-    //             sendcodeButton.textContent = "Sending...";
+    // Event listener for sending OTP
+    // if (sendcodeButton) {
+    //     sendcodeButton.addEventListener("click", function () {
+    //         sendcodeButton.disabled = true;
+    //         sendcodeButton.textContent = "Sending...";
 
-    //             $.ajax({
-    //                 url: '/Employee/ChangeEmailOTP',
-    //                 type: 'POST',
-    //                 data: {
-    //                     admn_newemail: newemailInput.value
-    //                 },
-    //                 success: function (response) {
-    //                     if (response.success) {
-    //                         const newExpirationTime = response.otptime + 300; // Update expiration time from server
-    //                         const remainingTime = newExpirationTime - <?= $timenow_stamp ?>;
-    //                         startCountdown(remainingTime);
-    //                     } else {
-    //                         sendcodeButton.textContent = "Failed";
-    //                         console.error(response.message);
-    //                         console.error(response.debug);
-    //                     }
-    //                 },
-    //                 error: function (xhr, status, error) {
-    //                     console.error('AJAX Error:', error);
-    //                     sendcodeButton.textContent = "Error";
+    //         $.ajax({
+    //             url: '/EmployeeController/ChangeEmailOTP',
+    //             type: 'POST',
+    //             data: {
+    //                 admn_newemail: newemailInput.value
+    //             },
+    //             success: function (response) {
+    //                 if (response.success) {
+    //                     const newExpirationTime = response.otptime + 300; // Update expiration time from server
+    //                     const remainingTime = newExpirationTime - <?= $timenow ?>;
+    //                     startCountdown(remainingTime);
+    //                 } else {
+    //                     sendcodeButton.textContent = "Failed";
+    //                     console.error(response.message);
+    //                     console.error(response.debug);
     //                 }
-    //             });
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 console.error('AJAX Error:', error);
+    //                 sendcodeButton.textContent = "Error";
+    //             }
     //         });
-    //     }
+    //     });
+    // }
     // });
 </script>
 
