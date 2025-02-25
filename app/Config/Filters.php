@@ -3,6 +3,7 @@
 namespace Config;
 
 use App\Filters\AuthFilter;
+use App\Filters\EventFilter;
 use App\Filters\RegistrationFilter;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
@@ -30,6 +31,7 @@ class Filters extends BaseConfig
         // mychanges
         'registrationfilter' => RegistrationFilter::class,
         'authenticationfilter' => AuthFilter::class,
+        'eventfilter' => EventFilter::class,
     ];
 
     /**
@@ -60,6 +62,7 @@ class Filters extends BaseConfig
                     '/logout',
                 ]
             ],
+            'eventfilter'
         ],
         'after' => [
             'toolbar',

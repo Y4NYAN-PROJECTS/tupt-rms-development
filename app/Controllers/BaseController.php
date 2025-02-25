@@ -142,6 +142,7 @@ abstract class BaseController extends Controller
         // [ Date Time ]
         $this->data['timenow'] = Time::now()->toTimeString(); // e.g., "15:45:30"
         $this->data['datenow'] = Time::today()->toDateString(); // e.g., "2024-10-29"
+        $this->data['datetime'] = Time::now()->toDateTimeString();
 
         $this->data['timenow_stamp'] = Time::now()->getTimestamp();
 

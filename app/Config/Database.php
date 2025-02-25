@@ -29,9 +29,12 @@ class Database extends Config
     public array $default = [
         'DSN' => '',
         'hostname' => 'localhost',
-        'username' => 'u191356414_admnhonorio',
-        'password' => 'Tr9!Gv2#_2024',
-        'database' => 'u191356414_db_tuptrms',
+        'username' => 'root',
+        'password' => '',
+        'database' => 'tup_db',
+        // 'username' => 'u191356414_admnhonorio',
+        // 'password' => 'Tr9!Gv2#_2024',
+        // 'database' => 'u191356414_db_tuptrms',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
@@ -46,6 +49,7 @@ class Database extends Config
         'port' => 3306,
         'numberNative' => false,
     ];
+
 
     /**
      * This database connection is used when

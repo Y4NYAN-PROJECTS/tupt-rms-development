@@ -17,8 +17,8 @@ class App extends BaseConfig
      * E.g., http://example.com/
      */
 
-    public string $baseURL = 'https://tupt-rms.com/';
-    // public string $baseURL = 'http://172.34.22.83:8080/';
+    // public string $baseURL = 'https://tupt-rms.com/';
+    public string $baseURL = 'http://localhost:8080/';
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.

@@ -107,6 +107,7 @@ class AdminController extends BaseController
             if ($updatestatus) {
                 if ($rqst_logid) {
                     $this->LogComplete($rqst_logid);
+                    $this->SendEmail($rqst_accountid, 2);
                 }
                 return $this->response->setJSON(['success' => true]);
             } else {
@@ -129,6 +130,7 @@ class AdminController extends BaseController
             if ($updatestatus) {
                 if ($rqst_logid) {
                     $this->LogComplete($rqst_logid);
+                    $this->SendEmail($rqst_accountid, 3);
                 }
                 return $this->response->setJSON(['success' => true]);
             } else {
@@ -137,6 +139,38 @@ class AdminController extends BaseController
         }
 
         return $this->response->setJSON(['success' => false, 'message' => 'Invalid account ID.']);
+    }
+
+
+    public function SendEmail($account_id, $status)
+    {
+        $accountsModel = new AccountsModel();
+        $account = $accountsModel->where('account_id', $account_id)->first();
+        $email = $account['email_address'];
+
+        switch ($status) {
+            case 2:
+                $template = 'request-approved.html';
+                break;
+            case 3:
+                $template = 'request-declined.html';
+                break;
+        }
+        $emailsubject = 'Registration Request Status';
+        $templatePath = APPPATH . "/Views/EmailTemplates/$template";
+        $emailmessage = file_get_contents($templatePath);
+
+        $emailService = \Config\Services::email();
+        $emailService->setTo($email);
+        $emailService->setSubject($emailsubject);
+        $emailService->setMessage($emailmessage);
+        if ($emailService->send()) {
+            echo "sent";
+            exit;
+        } else {
+            echo "failed";
+            exit;
+        }
     }
 
     public function PDSPrintPage()
@@ -1896,8 +1930,13 @@ class AdminController extends BaseController
         }
 
         if ($rqst_profilepicture && $rqst_profilepicture->isValid() && !$rqst_profilepicture->hasMoved()) {
-            $profile_name = $rqst_profilepicture->getRandomName();
+            $profile_name = $profile_name = $this->data['user']['id_number'] . '.' . $rqst_profilepicture->getClientExtension();
             $profile_path = "$img_path/$profile_name";
+            $full_path = $directoryPath . '/' . $profile_name;
+
+            if (file_exists($full_path)) {
+                unlink($full_path); // Remove old file
+            }
 
             $rqst_profilepicture->move($directoryPath, $profile_name);
 

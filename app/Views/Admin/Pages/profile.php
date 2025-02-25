@@ -349,7 +349,7 @@
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label class="form-label">Degree <span class="text-danger">*</span></label>
-                                                <select name="admn_degree" id="extension" class="form-control <?= $degreeClass ?>">
+                                                <select name="admn_degree" id="degree" class="form-control <?= $degreeClass ?>">
                                                     <option value="">N/A</option>
                                                     <?php foreach ($degrees as $degree): ?>
                                                         <?php $isSelected = $degreeSelect == $degree['degree_id'] ? 'selected' : ''; ?>
@@ -511,7 +511,7 @@
 
                 <form action="/AdminController/UploadProfilePicture" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
-                        <input type="file" class="image-crop-filepond" data-allow-reorder="true" data-max-file-size="10MB" name="admn_profile_picture">
+                        <input type="file" class="image-crop-filepond" name="admn_profile_picture" data-max-file-size="10MB" data-allow-image-preview="true" data-allow-image-crop="true" data-image-crop-aspect-ratio="1:1">
                     </div>
 
                     <div class="modal-footer justify-content-center">
@@ -521,9 +521,42 @@
             </div>
         </div>
     </div>
-    <!-- [ sample-page ] end -->
 </div>
 
+<script>
+    // Register plugins
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+        FilePondPluginImageCrop,
+        FilePondPluginImageResize,
+        FilePondPluginImageTransform
+    );
+
+    // Initialize FilePond
+    const pond = FilePond.create(document.querySelector('.image-crop-filepond'), {
+        allowImageCrop: true,
+        imageCropAspectRatio: '1:1',
+
+        allowImageResize: true,
+        imageResizeTargetWidth: 500,
+        imageResizeTargetHeight: 500,
+
+        allowImageTransform: true,
+
+        // Ensures only the cropped & resized version is uploaded
+        imageTransformVariants: {
+            'cropped': (transforms) => {
+                transforms.resize = {
+                    size: { width: 500, height: 500 },
+                };
+                return transforms;
+            }
+        },
+        imageTransformOutputMimeType: 'image/jpeg',
+        imageTransformOutputQuality: 1
+    });
+
+</script>
 
 
 <script>

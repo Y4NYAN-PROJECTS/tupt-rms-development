@@ -6,8 +6,8 @@ use CodeIgniter\Config\BaseConfig;
 
 class Email extends BaseConfig
 {
-    public string $fromEmail  = 'tupt';
-    public string $fromName   = 'TUPT Employee System';
+    public string $fromEmail = 'tupt';
+    public string $fromName = 'TUPT Employee System';
     public string $recipients = '';
 
     /**
@@ -120,4 +120,6 @@ class Email extends BaseConfig
      * Enable notify message from server
      */
     public bool $DSN = false;
+
 }
+

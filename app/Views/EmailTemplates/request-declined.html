@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account Decline</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #f8f8ff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            background-color: rgba(255, 136, 136, 0.8); /* Light red with transparency */
+            backdrop-filter: blur(10px); /* Blur effect */
+            -webkit-backdrop-filter: blur(10px); /* For Safari support */
+            text-align: center;
+            padding: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+
+        .content {
+            padding: 30px;
+            text-align: center;
+            color: #333;
+        }
+
+        .content h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .content p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #d83434;
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #e60000;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <img src="https://tupt-rms.com/tup-files/tup-logo-transparent.png" alt="Logo" class="logo">
+        </div>
+
+        <!-- BODY CONTENT -->
+        <div class="content">
+            <h1 style="color: #d9534f;">Account Declined ❌</h1>
+            <p>
+                Dear User, <br><br>
+                Unfortunately, your registration request has been <strong>declined</strong> by the administrator.
+                You may review your details and <strong>submit a new registration request</strong>.
+            </p>
+            <a href="https://tupt-rms.com/register" class="btn" style="background-color: #d9534f;">Register Again</a>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>&copy; 2024 Technological University of the Philippines. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>
