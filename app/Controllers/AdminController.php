@@ -58,6 +58,7 @@ class AdminController extends BaseController
 
     public function AccountsEmployeePage()
     {
+
         $status = 2;
         $usertype = 2;
 
@@ -81,6 +82,43 @@ class AdminController extends BaseController
         ];
         $data = array_merge($this->data, $data);
         return view('/Admin/Pages/accounts-administrator', $data);
+    }
+
+
+    public function UpdateUserDetails()
+    {
+        $rqst_roleid = $this->request->getPost('admn_role');
+        $rqst_employeetypeid = $this->request->getPost('admn_employeetype');
+        $rqst_departmentid = $this->request->getPost('admn_department');
+        $rqst_usertype = $this->request->getPost('admn_usertype');
+        $rqst_accountid = $this->request->getPost('admn_accountid');
+
+        $accountdata = [
+            'account_id' => $rqst_accountid,
+            'role_id' => $rqst_roleid,
+            'employee_type_id' => $rqst_employeetypeid,
+            'department_id' => $rqst_departmentid,
+            'user_type' => $rqst_usertype,
+        ];
+        $accountsModel = new AccountsModel();
+        $saverow = $accountsModel->save($accountdata);
+
+        if ($saverow) {
+            if ($rqst_usertype != session()->get('logged_usertype')) {
+                return redirect()->to('/logout');
+            }
+
+            // updated
+            session()->setFlashdata('alert_updatesuccess', 'Updated!');
+            if ($rqst_usertype == 1) {
+                return redirect()->to('/AdminController/AccountsAdministratorPage');
+            } else if ($rqst_usertype == 2) {
+                return redirect()->to('/AdminController/AccountsEmployeePage');
+            }
+        } else {
+            session()->setFlashdata('alert_failed', 'Failed!');
+            return redirect()->back();
+        }
     }
 
     public function ProfileVisit($accountcode)
@@ -140,7 +178,6 @@ class AdminController extends BaseController
 
         return $this->response->setJSON(['success' => false, 'message' => 'Invalid account ID.']);
     }
-
 
     public function SendEmail($account_id, $status)
     {
@@ -1342,33 +1379,6 @@ class AdminController extends BaseController
         }
     }
 
-    public function UpdateRole()
-    {
-        $rqst_roleid = $this->request->getPost('admn_role');
-        $rqst_accountid = $this->request->getPost('admn_accountid');
-        $rqst_usertype = $this->request->getPost('admn_usertype');
-
-        $accountdata = [
-            'account_id' => $rqst_accountid,
-            'role_id' => $rqst_roleid,
-        ];
-        $accountsModel = new AccountsModel();
-        $saverow = $accountsModel->save($accountdata);
-
-        if ($saverow) {
-            // updated
-            session()->setFlashdata('alert_updatesuccess', 'Updated!');
-            if ($rqst_usertype == 1) {
-                return redirect()->to('/AdminController/AccountsAdministratorPage');
-            } else if ($rqst_usertype == 2) {
-                return redirect()->to('/AdminController/AccountsEmployeePage');
-            }
-
-        } else {
-            session()->setFlashdata('alert_failed', 'Failed!');
-            return redirect()->back();
-        }
-    }
 
     public function DeleteDepartment()
     {

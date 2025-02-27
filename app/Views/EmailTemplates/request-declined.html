@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Account Decline</title>
+    <title>Account Approved</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap');
 
@@ -20,17 +20,14 @@
             max-width: 600px;
             margin: 0 auto;
             background: white;
-            border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
 
         .header {
-            background-color: rgba(255, 136, 136, 0.8); /* Light red with transparency */
-            backdrop-filter: blur(10px); /* Blur effect */
-            -webkit-backdrop-filter: blur(10px); /* For Safari support */
             text-align: center;
             padding: 20px;
+            border-bottom: 1px solid #ddd;
         }
 
         .logo {
@@ -40,6 +37,8 @@
         }
 
         .content {
+            background-color: rgba(247, 247, 247, 0.8);
+            /* Light red with transparency */
             padding: 30px;
             text-align: center;
             color: #333;
@@ -55,7 +54,7 @@
         .content p {
             font-size: 16px;
             line-height: 1.6;
-            color: #555;
+            color: #3a3a3a;
         }
 
         .btn {
@@ -63,7 +62,9 @@
             background-color: #d83434;
             color: white;
             font-weight: 600;
-            padding: 12px 24px;
+            width: 50%;
+            padding-top: 12px;
+            padding-bottom: 12px;
             border-radius: 6px;
             text-decoration: none;
             margin-top: 20px;
@@ -93,13 +94,13 @@
 
         <!-- BODY CONTENT -->
         <div class="content">
-            <h1 style="color: #d9534f;">Account Declined ❌</h1>
+            <h1>Account Declined ❌</h1>
             <p>
                 Dear User, <br><br>
-                Unfortunately, your registration request has been <strong>declined</strong> by the administrator.
-                You may review your details and <strong>submit a new registration request</strong>.
+                Unfortunately, your registration request has been <strong>declined</strong> by the administrator. You may review your details and
+                 and access your account! <strong>submit a new registration request.</strong>
             </p>
-            <a href="https://tupt-rms.com/register" class="btn" style="background-color: #d9534f;">Register Again</a>
+            <a href="https://tupt-rms.com" class="btn">Login Now</a>
         </div>
 
         <!-- FOOTER -->

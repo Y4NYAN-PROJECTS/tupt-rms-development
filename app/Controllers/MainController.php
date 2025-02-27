@@ -46,20 +46,6 @@ class MainController extends BaseController
                             'is_logged' => true,
                             'logged_id' => $userinfo['account_id'],
                             'logged_usertype' => $userinfo['user_type'],
-                            'logged_code' => $userinfo['account_code'],
-                            'logged_idnumber' => $userinfo['id_number'],
-                            'logged_fullname' => $userinfo['full_name'],
-                            'logged_firstname' => $userinfo['first_name'],
-                            'logged_middlename' => $userinfo['middle_name'],
-                            'logged_lastname' => $userinfo['last_name'],
-                            'logged_extension' => $userinfo['extension_name'],
-                            'logged_email' => $userinfo['email_address'],
-                            'logged_department' => $userinfo['department_id'],
-                            'logged_plantilla' => $userinfo['plantilla_id'],
-                            'logged_accesslevel' => $userinfo['access_level'],
-                            'logged_status' => $userinfo['status'],
-                            'logged_imagepath' => $userinfo['image_path'],
-                            'logged_datecreated' => $userinfo['date_created'],
                         ]);
                         session()->setFlashdata('fd_primary_toast_center', "Welcome back! " . $userinfo['first_name']);
                         return redirect()->to('/AdminController/DashboardPage');
@@ -74,20 +60,6 @@ class MainController extends BaseController
                             'is_logged' => true,
                             'logged_id' => $userinfo['account_id'],
                             'logged_usertype' => $userinfo['user_type'],
-                            'logged_code' => $userinfo['account_code'],
-                            'logged_idnumber' => $userinfo['id_number'],
-                            'logged_fullname' => $userinfo['full_name'],
-                            'logged_firstname' => $userinfo['first_name'],
-                            'logged_middlename' => $userinfo['middle_name'],
-                            'logged_lastname' => $userinfo['last_name'],
-                            'logged_extension' => $userinfo['extension_name'],
-                            'logged_email' => $userinfo['email_address'],
-                            'logged_department' => $userinfo['department_id'],
-                            'logged_plantilla' => $userinfo['plantilla_id'],
-                            'logged_accesslevel' => $userinfo['access_level'],
-                            'logged_status' => $userinfo['status'],
-                            'logged_imagepath' => $userinfo['image_path'],
-                            'logged_datecreated' => $userinfo['date_created'],
                         ]);
                         session()->setFlashdata('fd_primary_toast_center', "Welcome back! " . $userinfo['first_name']);
                         return redirect()->to('/EmployeeController/DashboardPage');
@@ -137,6 +109,7 @@ class MainController extends BaseController
 
         // Get validated data
         $rqst_department = $this->request->getPost('reg_department');
+        $rqst_employeetype = $this->request->getPost('reg_employeetype');
         $rqst_plantilla = $this->request->getPost('reg_plantilla');
         $rqst_firstname = $this->request->getPost('reg_firstname');
         $rqst_middlename = $this->request->getPost('reg_middlename');
@@ -186,6 +159,12 @@ class MainController extends BaseController
                 'rules' => 'required',
                 'errors' => [
                     'required' => 'Please select your departments.',
+                ],
+            ],
+            'reg_employeetype' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select what type of employee.',
                 ],
             ],
             'reg_plantilla' => [
@@ -247,6 +226,7 @@ class MainController extends BaseController
         session()->set([
             's_accountcode' => strtoupper($accountcode),
             's_user_type' => $rqst_usertype,
+            's_employeetype' => $rqst_employeetype,
             's_department' => $rqst_department,
             's_plantilla' => $rqst_plantilla,
             's_firstname' => strtoupper($rqst_firstname),
@@ -377,6 +357,7 @@ class MainController extends BaseController
                 'last_name' => session()->get('s_lastname'),
                 'extension_name' => session()->get('s_extension'),
                 'email_address' => session()->get('s_email'),
+                'employee_type_id' => session()->get('s_employeetype'),
                 'department_id' => session()->get('s_department'),
                 'plantilla_id' => session()->get('s_plantilla'),
                 'user_type' => session()->get('s_user_type'),

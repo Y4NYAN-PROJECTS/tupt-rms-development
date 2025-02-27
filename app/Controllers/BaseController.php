@@ -6,6 +6,7 @@ use App\Models\AccountsModel;
 use App\Models\DegreeModel;
 use App\Models\DepartmentCategoryModel;
 use App\Models\DepartmentModel;
+use App\Models\EmployeeTypeModel;
 use App\Models\ExtensionModel;
 use App\Models\GenderModel;
 use App\Models\LogsModel;
@@ -135,6 +136,9 @@ abstract class BaseController extends Controller
         $degreeModel = new DegreeModel();
         $this->data['degrees'] = $degreeModel->findAll();
 
+        // [ Employee Types ]
+        $employeetypeModel = new EmployeeTypeModel();
+        $this->data['employeetypes'] = $employeetypeModel->findAll();
     }
 
     private function loadDateTime()

@@ -45,6 +45,7 @@
                                     <th>Full Name</th>
                                     <th>Gender</th>
                                     <th>Email</th>
+                                    <th>Employee Type</th>
                                     <th>Departments</th>
                                     <th>Plantilla</th>
                                     <th>Role</th>
@@ -58,6 +59,7 @@
                                         <td><?= $administrator['full_name'] ?></td>
                                         <td><?= $administrator['sex'] ?? '-' ?></td>
                                         <td><?= $administrator['email_address'] ?></td>
+                                        <td><?= $administrator['employee_type_name'] ?></td>
                                         <td><?= $administrator['department_name'] ?></td>
                                         <td><?= $administrator['plantilla_title'] ?></td>
                                         <td><?= $administrator['role_code'] ?? 'Not Assigned' ?></td>
@@ -66,8 +68,8 @@
                                                 <i class="ti ti-eye-off f-20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visit Profile"></i>
                                             </a>
 
-                                            <a href="#" class="avtar avtar-xs btn-link-secondary" data-bs-toggle="modal" data-bs-target="#updateRole" data-account-id="<?= $administrator['account_id'] ?>" data-role-id="<?= $administrator['role_id'] ?? 0 ?>">
-                                                <i class="ti ti-trophy f-20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Role"></i>
+                                            <a href="#" class="avtar avtar-xs btn-link-secondary" data-bs-toggle="modal" data-bs-target="#updateUserDetailModal" data-account-id="<?= $administrator['account_id'] ?>" data-role-id="<?= $administrator['role_id'] ?? 0 ?>" data-department-id="<?= $administrator['department_id'] ?? 0 ?>" data-employee-type-id="<?= $administrator['employee_type_id'] ?? 0 ?>" data-user-type-id="<?= $administrator['user_type'] ?? 0 ?>">
+                                                <i class="ti ti-edit f-20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -90,34 +92,67 @@
     </div>
 <?php endif; ?>
 
-<!-- [ Update Role ] -->
-<div class="modal fade" id="updateRole" tabindex="-1">
+<!-- [ Update User Details ] -->
+<div class="modal fade" id="updateUserDetailModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="">
-                    <h3 class="modal-title">Assign Role</h3>
-                    <small>Select a role to be assigned.</small>
+                    <h3 class="modal-title">Update Details</h3>
+                    <small>Changes will reflect right away.</small>
                 </div>
                 <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form action="/AdminController/UpdateRole" method="post" enctype="multipart/form-data">
+            <form action="/AdminController/UpdateUserDetails" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <div class="modal-body">
-                        <label for="updt-role-id">Role</label>
-                        <select name="admn_role" id="updt-role-id" class="form-control">
-                            <option value="0">Select Role</option>
-                            <?php foreach ($roles as $role): ?>
-                                <option value="<?= $role['role_id']; ?>">
-                                    <?= $role['role_code']; ?> - <?= $role['role_description']; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="updt-emptype-id">Employee Type</label>
+                                <select name="admn_employeetype" id="updt-emptype-id" class="form-control" required>
+                                    <?php foreach ($employeetypes as $employeetype): ?>
+                                        <option value="<?= $employeetype['employee_type_id']; ?>">
+                                            <?= $employeetype['employee_type_name']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label for="updt-role-id">Role</label>
+                                <select name="admn_role" id="updt-role-id" class="form-control">
+                                    <option value="0">Select Role</option>
+                                    <?php foreach ($roles as $role): ?>
+                                        <option value="<?= $role['role_id']; ?>">
+                                            <?= $role['role_code']; ?> - <?= $role['role_description']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label for="updt-dept-id">Department</label>
+                                <select name="admn_department" id="updt-dept-id" class="form-control" required>
+                                    <?php foreach ($departments as $department): ?>
+                                        <option value="<?= $department['department_id']; ?>">
+                                            <?= $department['department_acronym']; ?> - <?= $department['department_name']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label for="updt-usertype-id">User Type <small class="form-text text-muted">(This will change the access level of user)</small></label>
+                                <select name="admn_usertype" id="updt-usertype-id" class="form-control" required>
+                                    <option value="1">Administrator</option>
+                                    <option value="2">Employee</option>
+                                </select>
+                            </div>
+                        </div>
 
                         <!-- [ Hidden Input/s -->
                         <input type="hidden" id="updt-role-accountid" name="admn_accountid">
-                        <input type="hidden" id="updt-role-usertype" name="admn_usertype" value="1">
                         <!-- [ Hidden Input/s -->
                     </div>
                 </div>
@@ -137,17 +172,28 @@
                 event.preventDefault();
 
                 const roleid = this.getAttribute('data-role-id');
+                const departmentid = this.getAttribute('data-department-id');
+                const employeetypeid = this.getAttribute('data-employee-type-id');
+                const usertypeid = this.getAttribute('data-user-type-id');
                 const accountid = this.getAttribute('data-account-id');
 
                 console.log('roleid:', roleid);
+                console.log('departmentid:', departmentid);
+                console.log('employeetypeid:', employeetypeid);
+                console.log('usertypeid:', usertypeid);
                 console.log('accountid:', accountid);
 
                 const modalroleId = document.getElementById('updt-role-id');
+                const modaldeptId = document.getElementById('updt-dept-id');
+                const modalemptypeId = document.getElementById('updt-emptype-id');
+                const modalusertypeId = document.getElementById('updt-usertype-id');
                 const modalaccountId = document.getElementById('updt-role-accountid');
 
                 if (modalroleId) modalroleId.value = roleid;
+                if (modaldeptId) modaldeptId.value = departmentid;
+                if (modalemptypeId) modalemptypeId.value = employeetypeid;
+                if (modalusertypeId) modalusertypeId.value = usertypeid;
                 if (modalaccountId) modalaccountId.value = accountid;
-
             });
         });
     });

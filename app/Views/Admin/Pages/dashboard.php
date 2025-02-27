@@ -57,33 +57,52 @@
 
 <div class="row">
     <!-- Graph -->
-    <div class="col-md-6">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h5 class="mb-0">Total Income</h5>
-                            <div class="dropdown">
-                                <a class="avtar avtar-s btn-link-secondary dropdown-toggle arrow-none" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="ti ti-dots-vertical f-18"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item ongoing-button" href="#">Download</a>
-                                </div>
-                            </div>
+    <div class="col-sm-12 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Department Analytics</h5>
+                    <div class="dropdown">
+                        <a class="avtar avtar-s btn-link-secondary dropdown-toggle arrow-none" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="ti ti-dots-vertical f-18"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item ongoing-button" href="#">Download</a>
                         </div>
-                        <div id="total-income-graph"></div>
                     </div>
+                </div>
+                <div class="my-3">
+                    <div id="department-categories-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Employee Analytics</h5>
+                    <div class="dropdown">
+                        <a class="avtar avtar-s btn-link-secondary dropdown-toggle arrow-none" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="ti ti-dots-vertical f-18"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item ongoing-button" href="#">Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="my-3">
+                    <div id="employee-types-chart"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Cards -->
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="row">
-            <div class="col-xxl-6 col-md-12">
+            <div class="col-12 col-md-6 col-xxl-4 ">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -102,7 +121,7 @@
                 </div>
             </div>
 
-            <div class="col-xxl-6 col-md-12">
+            <div class="col-12 col-md-6 col-xxl-4 ">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -121,7 +140,7 @@
                 </div>
             </div>
 
-            <div class="col-xxl-6 col-md-12">
+            <div class="col-12 col-md-6 col-xxl-4 ">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -140,7 +159,7 @@
                 </div>
             </div>
 
-            <div class="col-xxl-6 col-md-12">
+            <div class="col-12 col-md-6 col-xxl-4 ">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -159,7 +178,7 @@
                 </div>
             </div>
 
-            <div class="col-xxl-6 col-md-12">
+            <div class="col-12 col-md-6 col-xxl-4 ">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -178,7 +197,7 @@
                 </div>
             </div>
 
-            <div class="col-xxl-6 col-md-12">
+            <div class="col-12 col-md-6 col-xxl-4 ">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -200,25 +219,28 @@
     </div>
 </div>
 
-<script src="/assets/js/plugins/apexcharts.min.js"></script>
+
 <script>
-    var options8 = {
+    // [ Department Categories ]
+    var categoriesSettings = {
         chart: {
             height: 250,
             type: 'donut'
         },
         series: [
-            <?php foreach ($analytics['categories'] as $category): ?>
-                                <?php $count = $category['count']; ?>
-                                <?= $count . "," ?>
-        <?php endforeach; ?>
+            <?php foreach ($analytics['categories'] as $category) {
+                $count = $category['count'];
+                echo $count . ",";
+            }
+            ?>
         ],
-        colors: ['#4680FF', '#E58A00', '#2CA87F', '#4640FF'],
+        colors: ['#BC1515', '#19ACE6', '#E6AC19', '#1C6D17'],
         labels: [
-            <?php foreach ($analytics['categories'] as $category): ?>
-                                <?php $title = $category['department_category_code']; ?>
-                                <?= "'$title'," ?>
-            <?php endforeach; ?>
+            <?php foreach ($analytics['categories'] as $category) {
+                $title = $category['department_category_code'];
+                echo "'$title',";
+            }
+            ?>
         ],
         fill: {
             opacity: [1, 1, 1, 0.3]
@@ -266,9 +288,58 @@
             }
         ]
     };
+    var departmentCategoriesChart = new ApexCharts(document.querySelector('#department-categories-chart'), categoriesSettings);
+    departmentCategoriesChart.render();
 
-    var chart = new ApexCharts(document.querySelector('#total-income-graph'), options8);
-    chart.render();
+    // [ Employee Types ]
+    var typesSettings = {
+        chart: {
+            height: 250,
+            type: 'pie'
+        },
+        labels: [
+            <?php foreach ($analytics['employeetypes'] as $types) {
+                $title = $types['employee_type_name'];
+                echo "'$title',";
+            }
+            ?>
+        ],
+        series: [
+            <?php foreach ($analytics['employeetypes'] as $types) {
+                $count = $types['count'];
+                echo $count . ",";
+            }
+            ?>
+        ],
+        colors: [],
+        fill: {
+            opacity: [1, 0.6, 0.4, 0.6, 0.8, 1]
+        },
+        legend: {
+            show: true
+        },
+        dataLabels: {
+            enabled: true,
+            dropShadow: {
+                enabled: false
+            }
+        },
+        responsive: [
+            {
+                breakpoint: 575,
+                options: {
+                    chart: {
+                        height: 250
+                    },
+                    dataLabels: {
+                        enabled: false
+                    }
+                }
+            }
+        ]
+    };
+    var employeeTypeChart = new ApexCharts(document.querySelector('#employee-types-chart'), typesSettings);
+    employeeTypeChart.render();
 </script>
 
 <?= $this->endSection(); ?>

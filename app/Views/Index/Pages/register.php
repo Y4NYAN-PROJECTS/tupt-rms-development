@@ -89,6 +89,25 @@ if ($usertype == 1) {
 
                 <div class="col-12">
                     <div class="mb-3">
+                        <label class="form-label">Employee Type</label>
+                        <select class="form-select <?= isset($validation) && $validation->hasError('reg_employeetype') ? 'is-invalid' : '' ?>" name="reg_employeetype">
+                            <option value="">Select Employee Type</option>
+                            <?php foreach ($employeetypes as $employeetype): ?>
+                                <option value="<?= $employeetype['employee_type_id'] ?>" <?= (isset($oldinput) && $oldinput['reg_employeetype'] == $employeetype['employee_type_id']) ? 'selected' : '' ?>>
+                                    <?= $employeetype['employee_type_name'] ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+
+                        <!-- [ Error Message ] -->
+                        <?php if (isset($validation) && $validation->hasError('reg_employeetype')): ?>
+                            <div class="invalid-feedback"><?= $validation->getError('reg_employeetype') ?></div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="mb-3">
                         <label for="plntl-select" class="form-label">Plantilla</label>
                         <select id="plntl-select" class="form-select <?= isset($validation) && $validation->hasError('reg_plantilla') ? 'is-invalid' : '' ?>" name="reg_plantilla">
                             <option value="">Select Plantilla</option>

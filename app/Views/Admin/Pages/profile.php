@@ -75,37 +75,42 @@
                                 <small class="text-muted text-sm"><?= $user['id_number'] ?></small>
                             </div>
 
-                            <div class="card-body position-relative">
+                            <div class="card-body">
                                 <div class="row">
-                                    <div class="col-12 col-sm-6 col-md-12 col-lg-6 mb-3">
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
                                         <small class="mb-1 text-muted">User type</small>
                                         <p class="mb-0"><?= $user['user_type'] == 1 ? 'Administrator' : 'Employee' ?>
                                         </p>
                                     </div>
 
-                                    <div class="col-12 col-sm-6 col-md-12 col-lg-6 mb-3">
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
                                         <small class="mb-1 text-muted">Plantilla</small>
-                                        <p class="mb-0"><?= $user['plantilla_title'] ?></p>
+                                        <p class="mb-0"><?= $user['plantilla_title'] ?? '-' ?></p>
                                     </div>
 
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
+                                        <small class="mb-1 text-muted">Department</small>
+                                        <p class="mb-0"><?= $user['department_name'] ?? '-' ?></p>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
                                         <small class="mb-1 text-muted">Degree</small>
                                         <p class="mb-0"><?= $user['degree_title'] ?? '-' ?></p>
                                     </div>
 
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
-                                        <small class="mb-1 text-muted">Role</small>
-                                        <p class="mb-0"><?= $user['role_description'] ?? 'Not Assigned' ?></p>
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
+                                        <small class="mb-1 text-muted">Employee Type</small>
+                                        <p class="mb-0"><?= $user['employee_type_name'] ?? '-' ?>
+                                        </p>
                                     </div>
 
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
-                                        <small class="mb-1 text-muted">Department</small>
-                                        <p class="mb-0"><?= $user['department_name'] ?></p>
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
+                                        <small class="mb-1 text-muted">Role</small>
+                                        <p class="mb-0"><?= $user['role_description'] ?? 'Not Assigned' ?></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="col-12 col-sm-12 col-md-8 col-lg-7 col-xxl-8">
@@ -124,11 +129,11 @@
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item px-0 pt-0">
                                         <div class="row">
-                                            <div class="mb-3 col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="mb-3 col-12 col-sm-12 col-md-12 col-lg-6">
                                                 <p class="mb-1 text-muted">Full Name</p>
                                                 <p class="mb-0"><?= $user['full_name'] ?></p>
                                             </div>
-                                            <div class="mb-3 col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="mb-3 col-12 col-sm-12 col-md-12 col-lg-6">
                                                 <p class="mb-1 text-muted">Email</p>
                                                 <p class="mb-0"><?= $user['email_address']; ?>
                                             </div>
@@ -137,32 +142,32 @@
 
                                     <li class="list-group-item px-0">
                                         <div class="row">
-                                            <div class="mb-3 col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="mb-3 col-12 col-sm-12 col-md-12 col-lg-6">
                                                 <p class="mb-1 text-muted">Address</p>
-                                                <p class="mb-0"><?= $user['address']; ?></p>
+                                                <p class="mb-0"><?= $user['address'] ?? '-'; ?></p>
                                             </div>
 
-                                            <div class="mb-3 col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="mb-3 col-12 col-sm-12 col-md-12 col-lg-6">
                                                 <p class="mb-1 text-muted">Phone</p>
-                                                <p class="mb-0"><?= $user['mobile_number']; ?></p>
+                                                <p class="mb-0"><?= $user['mobile_number'] ?? '-'; ?></p>
                                             </div>
                                         </div>
                                     </li>
                                     <li class="list-group-item px-0">
                                         <div class="row">
-                                            <div class="mb-3 col-6 col-sm-6 col-md-4 col-lg-3">
+                                            <div class="mb-3 col-12 col-sm-6 col-md-6 col-lg-3">
                                                 <p class="mb-1 text-muted">Birth Date</p>
-                                                <p class="mb-0"><?= $user['birthdate']; ?></p>
+                                                <p class="mb-0"><?= $user['birthdate'] ?? '-'; ?></p>
                                             </div>
 
-                                            <div class="mb-3 col-6 col-sm-6 col-md-4 col-lg-3">
+                                            <div class="mb-3 col-12 col-sm-6 col-md-6 col-lg-3">
                                                 <p class="mb-1 text-muted">Age</p>
-                                                <p class="mb-0"><?= $user['age']; ?></p>
+                                                <p class="mb-0"><?= $user['age'] ?? '-'; ?></p>
                                             </div>
 
-                                            <div class="mb-3 col-12 col-sm-12 col-md-4 col-lg-6">
+                                            <div class="mb-3 col-12 col-sm-12 col-md-12 col-lg-6">
                                                 <p class="mb-1 text-muted">Gender</p>
-                                                <p class="mb-0"><?= $user['sex']; ?></p>
+                                                <p class="mb-0"><?= $user['sex'] ?? '-'; ?></p>
                                             </div>
                                         </div>
                                     </li>
