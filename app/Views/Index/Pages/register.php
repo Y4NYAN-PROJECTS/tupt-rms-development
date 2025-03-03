@@ -242,17 +242,20 @@ if ($usertype == 1) {
         // For idnumber format
         function formatIdNumberInput(event) {
             const plantillaCode = idnumberText.textContent;
+            let value = idnumberInput.value.replace(/\D/g, ''); // Remove non-numeric characters
 
-            let value = idnumberInput.value.replace(/\D/g, '');
-            if (value.length > 6) value = value.substring(0, 6);
+            if (value.length > 7) value = value.substring(0, 7); // Limit input to 7 digits
 
-            if (value.length > 2) {
+            if (value.length === 7) {
+                value = value.substring(0, 3) + '-' + value.substring(3);
+            } else if (value.length > 2) {
                 value = value.substring(0, 2) + '-' + value.substring(2);
             }
 
             idnumberInput.value = value;
             idnumberHidden.value = plantillaCode && value ? `${plantillaCode}${value}` : `${plantillaCode}`;
         }
+
 
         // For restrict key
         function restrictInvalidKeys(event) {

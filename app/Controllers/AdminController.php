@@ -93,6 +93,9 @@ class AdminController extends BaseController
         $rqst_usertype = $this->request->getPost('admn_usertype');
         $rqst_accountid = $this->request->getPost('admn_accountid');
 
+        $accountsModel = new AccountsModel();
+        $account = $accountsModel->find($rqst_accountid);
+
         $accountdata = [
             'account_id' => $rqst_accountid,
             'role_id' => $rqst_roleid,
@@ -104,8 +107,8 @@ class AdminController extends BaseController
         $saverow = $accountsModel->save($accountdata);
 
         if ($saverow) {
-            if ($rqst_usertype != session()->get('logged_usertype')) {
-                return redirect()->to('/logout');
+            if ($account['user_type'] != $rqst_usertype) {
+                $this->removeUserSession($rqst_accountid);
             }
 
             // updated
@@ -118,6 +121,23 @@ class AdminController extends BaseController
         } else {
             session()->setFlashdata('alert_failed', 'Failed!');
             return redirect()->back();
+        }
+    }
+
+    private function removeUserSession($accountId)
+    {
+        $db = \Config\Database::connect();
+
+        // Get session ID of the affected user
+        $query = $db->table('ci_sessions')
+            ->select('id')
+            ->like('data', 'user_id|s:' . strlen($accountId) . ':"' . $accountId . '";')
+            ->get();
+
+        if ($query->getNumRows() > 0) {
+            foreach ($query->getResult() as $row) {
+                $db->table('ci_sessions')->where('id', $row->id)->delete();
+            }
         }
     }
 

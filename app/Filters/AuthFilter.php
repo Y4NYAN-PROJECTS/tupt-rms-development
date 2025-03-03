@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\Models\AccountsModel;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -12,6 +13,7 @@ class AuthFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         $islogged = session()->get('is_logged');
+        $userid = session()->get('logged_id');
         $usertype = session()->get('logged_usertype');
 
         $uri = $request->getUri();
@@ -22,6 +24,12 @@ class AuthFilter implements FilterInterface
             return redirect()->to('/tup');
         } else {
             if ($islogged) {
+                $accountsModel = new AccountsModel();
+                $user = $accountsModel->find($userid);
+                if ($usertype != $user['user_type']) {
+                    return redirect()->to('/logout');
+                }
+
                 if ($usertype == 1) {
                     if ($controller !== 'admincontroller') {
                         session()->setFlashdata('fd_primary_toast_center', 'Unauthorized access.');
