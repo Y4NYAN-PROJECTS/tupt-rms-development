@@ -127,7 +127,7 @@ if ($usertype == 1) {
 
                 <div class="col-12">
                     <div class="mb-3">
-                        <label class="form-label">ID Number</label>
+                        <label class="form-label">Employee ID Number</label>
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-text" id="idnumber-text"></span>
@@ -240,21 +240,23 @@ if ($usertype == 1) {
         }
 
         // For idnumber format
-        function formatIdNumberInput(event) {
-            const plantillaCode = idnumberText.textContent;
-            let value = idnumberInput.value.replace(/\D/g, ''); // Remove non-numeric characters
+        // function formatIdNumberInput(event) {
+        //     const plantillaCode = idnumberText.textContent;
+        //     let value = idnumberInput.value.replace(/\D/g, ''); // Remove non-numeric characters
 
-            if (value.length > 7) value = value.substring(0, 7); // Limit input to 7 digits
+        //     if (value.length > 7) value = value.substring(0, 7); // Limit input to 7 digits
 
-            if (value.length === 7) {
-                value = value.substring(0, 3) + '-' + value.substring(3);
-            } else if (value.length > 2) {
-                value = value.substring(0, 2) + '-' + value.substring(2);
-            }
+        //     if (value.length === 7) {
+        //         value = value.substring(0, 3) + '-' + value.substring(3);
+        //     } else if (value.length === 6) {
+        //         value = value.substring(0, 2) + '-' + value.substring(2);
+        //     } else if (value.length > 1) {
+        //         value = value.substring(0, 1) + '-' + value.substring(1);
+        //     }
 
-            idnumberInput.value = value;
-            idnumberHidden.value = plantillaCode && value ? `${plantillaCode}${value}` : `${plantillaCode}`;
-        }
+        //     idnumberInput.value = value;
+        //     idnumberHidden.value = plantillaCode && value ? `${plantillaCode}${value}` : `${plantillaCode}`;
+        // }
 
 
         // For restrict key
@@ -268,7 +270,7 @@ if ($usertype == 1) {
         updateIdNumberDisplay();
 
         plantillaSelect.addEventListener('change', updateIdNumberDisplay);
-        idnumberInput.addEventListener('input', formatIdNumberInput);
+        // idnumberInput.addEventListener('input', formatIdNumberInput);
         idnumberInput.addEventListener('keydown', restrictInvalidKeys);
     });
 

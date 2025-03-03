@@ -19,7 +19,7 @@ if ($usertype == 1) {
 
             <div class="my-2">
                 <label class="form-label">ID Number</label>
-                <input type="text" class="form-control" placeholder="XXXX-00-0000" id="idnumber" name="log_idnumber" required autofocus />
+                <input type="text" class="form-control text-uppercase" placeholder="XXXX-00-0000" id="idnumber" name="log_idnumber" required autofocus />
                 <div class="invalid-feedback"> ID number is not registered. </div>
             </div>
 

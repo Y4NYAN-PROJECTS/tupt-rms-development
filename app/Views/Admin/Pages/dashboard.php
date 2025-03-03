@@ -225,7 +225,7 @@
     var categoriesSettings = {
         chart: {
             height: 250,
-            type: 'donut'
+            type: 'pie'
         },
         series: [
             <?php foreach ($analytics['categories'] as $category) {
@@ -248,24 +248,11 @@
         legend: {
             show: true
         },
-        plotOptions: {
-            pie: {
-                donut: {
-                    size: '70%',
-                    labels: {
-                        show: true,
-                        name: {
-                            show: true
-                        },
-                        value: {
-                            show: true
-                        }
-                    }
-                }
-            }
-        },
         dataLabels: {
-            enabled: false
+            enabled: true,
+            dropShadow: {
+                enabled: false
+            }
         },
         responsive: [
             {
@@ -274,15 +261,8 @@
                     chart: {
                         height: 250
                     },
-                    plotOptions: {
-                        pie: {
-                            donut: {
-                                size: '65%',
-                                labels: {
-                                    show: false
-                                }
-                            }
-                        }
+                    dataLabels: {
+                        enabled: true
                     }
                 }
             }
@@ -332,7 +312,7 @@
                         height: 250
                     },
                     dataLabels: {
-                        enabled: false
+                        enabled: true
                     }
                 }
             }

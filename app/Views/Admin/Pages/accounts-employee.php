@@ -68,7 +68,7 @@
                                                 <i class="ti ti-eye-off f-20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visit Profile"></i>
                                             </a>
 
-                                            <a href="#" class="avtar avtar-xs btn-link-secondary" data-bs-toggle="modal" data-bs-target="#updateUserDetailModal" data-account-id="<?= $employee['account_id'] ?>" data-role-id="<?= $employee['role_id'] ?? 0 ?>" data-department-id="<?= $employee['department_id'] ?? 0 ?>" data-employee-type-id="<?= $employee['employee_type_id'] ?? 0 ?>" data-user-type-id="<?= $employee['user_type'] ?? 0 ?>">
+                                            <a href="#" class="avtar avtar-xs btn-link-secondary" data-bs-toggle="modal" data-bs-target="#updateUserDetailModal" data-account-id="<?= $employee['account_id'] ?>" data-role-id="<?= $employee['role_id'] ?? 0 ?>" data-department-id="<?= $employee['department_id'] ?? 0 ?>" data-employee-type-id="<?= $employee['employee_type_id'] ?? 0 ?>" data-user-type-id="<?= $employee['user_type'] ?? 0 ?>" data-plantilla-id="<?= $administrator['plantilla_id'] ?? 0 ?>">
                                                 <i class="ti ti-edit f-20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update"></i>
                                             </a>
                                         </td>
@@ -142,6 +142,17 @@
                                 </select>
                             </div>
 
+                            <div class="col-md-12 mb-3">
+                                <label for="updt-plntl-id">Plantilla</label>
+                                <select name="admn_plantilla" id="updt-plntl-id" class="form-control" required>
+                                    <?php foreach ($plantillas as $plantilla): ?>
+                                        <option value="<?= $plantilla['plantilla_id']; ?>">
+                                            <?= $plantilla['plantilla_title']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
                             <div class="col-md-12">
                                 <label for="updt-usertype-id">User Type <small class="form-text text-muted">(This will change the access level of user)</small></label>
                                 <select name="admn_usertype" id="updt-usertype-id" class="form-control" required>
@@ -175,24 +186,28 @@
                 const departmentid = this.getAttribute('data-department-id');
                 const employeetypeid = this.getAttribute('data-employee-type-id');
                 const usertypeid = this.getAttribute('data-user-type-id');
+                const plantillaid = this.getAttribute('data-plantilla-id');
                 const accountid = this.getAttribute('data-account-id');
 
                 console.log('roleid:', roleid);
                 console.log('departmentid:', departmentid);
                 console.log('employeetypeid:', employeetypeid);
                 console.log('usertypeid:', usertypeid);
+                console.log('plantillaid:', plantillaid);
                 console.log('accountid:', accountid);
 
                 const modalroleId = document.getElementById('updt-role-id');
                 const modaldeptId = document.getElementById('updt-dept-id');
                 const modalemptypeId = document.getElementById('updt-emptype-id');
                 const modalusertypeId = document.getElementById('updt-usertype-id');
+                const modalplntlId = document.getElementById('updt-plntl-id');
                 const modalaccountId = document.getElementById('updt-role-accountid');
 
                 if (modalroleId) modalroleId.value = roleid;
                 if (modaldeptId) modaldeptId.value = departmentid;
                 if (modalemptypeId) modalemptypeId.value = employeetypeid;
                 if (modalusertypeId) modalusertypeId.value = usertypeid;
+                if (modalplntlId) modalplntlId.value = plantillaid;
                 if (modalaccountId) modalaccountId.value = accountid;
             });
         });

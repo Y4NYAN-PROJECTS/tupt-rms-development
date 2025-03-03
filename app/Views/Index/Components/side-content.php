@@ -1,6 +1,7 @@
 <div class="auth-sidecontent">
     <div class="p-3 px-lg-5">
         <div class="text-center">
+            <img src="/tup-files/tup-logo-transparent.png" class="mb-3 rounded-circle" alt="TUPT Logo" style="height: 64px; background-color: white;" />
             <h2 class="text-white mb-0">Technological University of the Philippines</h2>
             <p class="text-white text-opacity-50">Employee Management System</p>
 

@@ -22,7 +22,7 @@ class MainController extends BaseController
             return redirect()->back();
         }
 
-        $rqst_idnumber = $this->request->getPost('log_idnumber');
+        $rqst_idnumber = strtoupper($this->request->getPost('log_idnumber'));
         $rqst_password = $this->request->getPost('log_password');
         $rqst_checklogin = $this->request->getPost('log_checklogin');
 

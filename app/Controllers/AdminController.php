@@ -91,13 +91,23 @@ class AdminController extends BaseController
         $rqst_employeetypeid = $this->request->getPost('admn_employeetype');
         $rqst_departmentid = $this->request->getPost('admn_department');
         $rqst_usertype = $this->request->getPost('admn_usertype');
+        $rqst_plantillaid = $this->request->getPost('admn_plantilla');
         $rqst_accountid = $this->request->getPost('admn_accountid');
 
         $accountsModel = new AccountsModel();
         $account = $accountsModel->find($rqst_accountid);
 
+        $plantillaModel = new PlantillaModel();
+        $plantilla = $plantillaModel->find($rqst_plantillaid);
+        $plantillatitlecode = $plantilla['plantilla_titlecode'];
+
+        // New ID Number
+        $explode = explode('-', $account['id_number']);
+        $idnumber = $plantillatitlecode . '-' . $explode[1] . '-' . $explode[2];
+
         $accountdata = [
             'account_id' => $rqst_accountid,
+            'id_number' => $idnumber,
             'role_id' => $rqst_roleid,
             'employee_type_id' => $rqst_employeetypeid,
             'department_id' => $rqst_departmentid,
