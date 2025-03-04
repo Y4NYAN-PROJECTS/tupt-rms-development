@@ -177,11 +177,11 @@ class MainController extends BaseController
                 'label' => 'ID Number',
                 'rules' => [
                     'required',
-                    'regex_match[/^\d{2}-\d{4}$/]',
+                    // 'regex_match[/^\d{2}-\d{4}$/]',
                 ],
                 'errors' => [
                     'required' => 'Id number is required.',
-                    'regex_match' => 'Invalid id number.',
+                    // 'regex_match' => 'Invalid id number.',
                 ],
             ],
             'reg_email' => [

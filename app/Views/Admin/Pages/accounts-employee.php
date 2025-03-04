@@ -68,7 +68,7 @@
                                                 <i class="ti ti-eye-off f-20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visit Profile"></i>
                                             </a>
 
-                                            <a href="#" class="avtar avtar-xs btn-link-secondary" data-bs-toggle="modal" data-bs-target="#updateUserDetailModal" data-account-id="<?= $employee['account_id'] ?>" data-role-id="<?= $employee['role_id'] ?? 0 ?>" data-department-id="<?= $employee['department_id'] ?? 0 ?>" data-employee-type-id="<?= $employee['employee_type_id'] ?? 0 ?>" data-user-type-id="<?= $employee['user_type'] ?? 0 ?>" data-plantilla-id="<?= $administrator['plantilla_id'] ?? 0 ?>">
+                                            <a href="#" class="avtar avtar-xs btn-link-secondary" data-bs-toggle="modal" data-bs-target="#updateUserDetailModal" data-account-id="<?= $employee['account_id'] ?>" data-role-id="<?= $employee['role_id'] ?? 0 ?>" data-department-id="<?= $employee['department_id'] ?? 0 ?>" data-employee-type-id="<?= $employee['employee_type_id'] ?? 0 ?>" data-user-type-id="<?= $employee['user_type'] ?? 0 ?>" data-plantilla-id="<?= $employee['plantilla_id'] ?? 0 ?>">
                                                 <i class="ti ti-edit f-20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update"></i>
                                             </a>
                                         </td>
