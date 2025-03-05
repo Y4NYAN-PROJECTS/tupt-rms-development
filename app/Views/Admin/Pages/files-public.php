@@ -273,7 +273,7 @@
                                                 <a class="avtar avtar-xs btn-link-secondary dropdown-toggle arrow-none" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons-two-tone f-18">more_vert</i></a>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item <?= $file['file_type'] != 'pdf' ? 'disabled' : '' ?>" href="#" data-bs-toggle="modal" data-bs-target="#viewPDF" data-path="<?= $file['file_path'] ?>">View</a>
-                                                    <a class="dropdown-item" href="<?= $file['file_path'] ?>" download>Download</a>
+                                                    <a class="dropdown-item file-download" href="<?= $file['file_path'] ?>" data-file-name="<?= $file['file_name'] ?>" download>Download</a>
                                                     <?php if ($isadminfiles): ?>
                                                         <a class="dropdown-item text-primary file-delete-button" href="#" data-file-id="<?= $file['file_id'] ?>">Delete</a>
                                                     <?php endif; ?>
@@ -330,7 +330,7 @@
                                                         <a class="avtar avtar-xs btn-link-secondary dropdown-toggle arrow-none" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons-two-tone f-18">more_vert</i></a>
                                                         <div class="dropdown-menu dropdown-menu-end">
                                                             <a class="dropdown-item" href="#">View</a>
-                                                            <a class="dropdown-item" href="#">Download</a>
+                                                            <a class="dropdown-item file-download" href="<?= $file['file_path'] ?>" data-file-name="<?= $file['file_name'] ?>" download>Download</a>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -675,7 +675,36 @@
                 modalIframe.src = filePath;
             });
         });
+
+        // Download - Log
+        const downloadLinks = document.querySelectorAll('.file-download');
+        downloadLinks.forEach(link => {
+            link.addEventListener('click', function (event) {
+                const filename = this.getAttribute('data-file-name');
+
+                $.ajax({
+                    url: '/AdminController/LogDownloadFile',
+                    type: 'POST',
+                    data: {
+                        file_name: filename
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            console.log('Log recorded successfully!');
+                        } else {
+                            console.error('Logging failed:', response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX Error:', error);
+                    }
+                });
+            });
+        });
     });
+
+
+
 </script>
 
 <?= $this->endSection(); ?>

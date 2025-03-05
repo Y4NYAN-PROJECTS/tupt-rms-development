@@ -23,7 +23,7 @@ class Session extends BaseConfig
      * @var class-string<BaseHandler>
      */
     // public string $driver = DatabaseHandler::class;
-    public string $driver = 'App\Libraries\SessionHandler';
+    public string $driver = 'CodeIgniter\Session\Handlers\FileHandler';
 
     /**
      * --------------------------------------------------------------------------
@@ -32,7 +32,7 @@ class Session extends BaseConfig
      *
      * The session cookie name, must contain only [0-9a-z_-] characters
      */
-    public string $cookieName = 'tuptrms';
+    public string $cookieName = 'ci_sessions';
 
     /**
      * --------------------------------------------------------------------------

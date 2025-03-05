@@ -35,11 +35,6 @@ class AdminController extends BaseController
         return view('/Admin/Pages/dashboard', $this->data);
     }
 
-    public function LogComplete($logid)
-    {
-        $logsModel = new LogsModel();
-        $logsModel->update($logid, ['is_complete' => 1]);
-    }
 
     public function AccountsRequestPage()
     {
@@ -2117,7 +2112,6 @@ class AdminController extends BaseController
         return redirect()->to('/AdminController/AccountProfilePage#change-password');
     }
 
-
     public function RedirectToProfileUpdate()
     {
         session()->setFlashdata('passwordFormData', [
@@ -2148,6 +2142,45 @@ class AdminController extends BaseController
 
         return $code;
     }
+
+    public function LogComplete($logid)
+    {
+        $logsModel = new LogsModel();
+        $logsModel->update($logid, ['is_complete' => 1]);
+    }
+
+    public function LogDownloadFile()
+    {
+        $filename = $this->request->getPost('file_name');
+        $name = $this->data['user']['full_name'];
+        $title = 'File Download';
+        $category = 'filedownload';
+
+        $phrases = [
+            "$name just grabbed your file - '$filename'.",
+            "$name has downloaded '$filename'.",
+            "$name accessed your shared file: '$filename'.",
+            "$name downloaded the file '$filename'.",
+            "'$filename' was downloaded by $name.",
+            "Heads up! $name just got their hands on '$filename'."
+        ];
+        $description = $phrases[array_rand($phrases)];
+
+        $logsModel = new LogsModel();
+        $logdata = [
+            'account_id' => $this->accountid,
+            'category' => $category,
+            'title' => $title,
+            'description' => $description
+        ];
+
+        if ($logsModel->insert($logdata)) {
+            return $this->response->setJSON(['success' => true]);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Failed to approve account.']);
+        }
+    }
+
 
     public function RemoveChangeEmailSessions()
     {

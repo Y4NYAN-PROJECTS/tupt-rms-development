@@ -13,7 +13,7 @@ class SessionHandler extends DatabaseHandler
 
         if (isset($userid)) {
             $this->db->table('ci_sessions')
-                ->where('id', "tuptrms:$session_id")
+                ->where('id', $session_id)
                 ->update(['user_id' => $userid]);
         }
 
