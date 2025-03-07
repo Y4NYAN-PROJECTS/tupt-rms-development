@@ -18,7 +18,7 @@ class App extends BaseConfig
      */
 
     // public string $baseURL = 'https://tupt-rms.com/';
-    public string $baseURL = 'http://localhost:8080/';
+    public string $baseURL = 'http://tupt-rms.local/';
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
