@@ -259,6 +259,58 @@ class MainController extends BaseController
     }
 
 
+    public function ForgotPassword()
+    {
+        $data = [];
+        $isformsubmitted = $this->request->getPost('is_submitted');
+        if ($isformsubmitted) {
+            $rqst = $this->request->getPost();
+            $rqst_idnumber = $this->request->getPost('fp_idnumber');
+            $rqst_email = $this->request->getPost('fp_emailaddress');
+
+            $validation = \Config\Services::validation();
+            $validationRules = [
+                'fp_idnumber' => [
+                    'label' => 'ID Number',
+                    'rules' => [
+                        'required',
+                        'idnumberCheck[' . $rqst_idnumber . ']',
+                    ],
+                    'errors' => [
+                        'required' => 'ID number is required.',
+                        'idnumberCheck' => 'ID number not found.'
+                    ],
+                ],
+                'fp_emailaddress' => [
+                    'label' => 'Email',
+                    'rules' => [
+                        'required',
+                        'valid_email',
+                        'emailCheck[' . $rqst_idnumber . ',' . $rqst_email . ']'
+                    ],
+                    'errors' => [
+                        'required' => 'Email field is required.',
+                        'valid_email' => 'Please enter a valid email address.',
+                        'emailCheck' => 'Incorrect Email Address',
+                    ],
+                ],
+            ];
+
+            if (!$this->validate($validationRules)) {
+                $data = [
+                    'validation' => $validation,
+                    'oldinput' => $rqst
+                ];
+                $data = array_merge($this->data, $data);
+            } else {
+                $accountModel = new AccountsModel();
+                $accountid = $accountModel->getAccountID($rqst_idnumber, $rqst_email);
+                $this->SendTemporaryPassword($accountid, $rqst_email);
+            }
+        }
+
+        return view('/Index/Pages/forgot-password', $data);
+    }
     public function SendOTP()
     {
         $email = session()->get('s_email');
@@ -296,6 +348,33 @@ class MainController extends BaseController
         } else {
             session()->setFlashdata('fd_primary_toast_center', 'Failed to send OTP Code');
             return redirect()->to('/');
+            // echo $emailService->printDebugger(['headers']);
+            // exit;
+        }
+    }
+
+    public function SendTemporaryPassword($accountid, $email)
+    {
+        $temporarypassword = $this->GeneratePassword();
+
+        $emailsubject = 'Temporary Password';
+        $templatePath = APPPATH . '/Views/EmailTemplates/temporary-password.html';
+        $emailmessage = file_get_contents($templatePath);
+        $emailmessage = str_replace('{{temp-pw}}', $temporarypassword, $emailmessage);
+
+        $emailService = \Config\Services::email();
+        $emailService->setTo($email);
+        $emailService->setSubject($emailsubject);
+        $emailService->setMessage($emailmessage);
+        if ($emailService->send()) {
+            $accountModel = new AccountsModel();
+            $accountModel->update($accountid, ['password' => password_hash($temporarypassword, PASSWORD_BCRYPT)]);
+
+            session()->setFlashdata('fd_primary_toast_center', 'Temporary Password has been sent');
+            return redirect()->to('/tup');
+        } else {
+            session()->setFlashdata('fd_primary_toast_center', 'Failed to process forgot password.');
+            return redirect()->to('/tup');
             // echo $emailService->printDebugger(['headers']);
             // exit;
         }
@@ -383,6 +462,18 @@ class MainController extends BaseController
         }
     }
 
+    public function GeneratePassword()
+    {
+        $length = 12;
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!_@';
+        $password = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $characters[random_int(0, strlen($characters) - 1)];
+        }
+
+        return $password;
+    }
 
     public function logout()
     {

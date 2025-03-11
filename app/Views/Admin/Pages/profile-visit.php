@@ -134,6 +134,37 @@
             </div>
         </div>
     </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="m-0">Promotion History</h4>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 table-datatable">
+                        <thead>
+                            <tr>
+                                <th>Promoted To</th>
+                                <th>Date Promoted</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($promtionhistories as $promtionhistory): ?>
+                                <tr>
+                                    <td><?= $promtionhistory['plantilla_title'] ?></td>
+                                    <td><?= $promtionhistory['date_promoted'] ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 

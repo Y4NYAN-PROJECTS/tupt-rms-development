@@ -34,7 +34,7 @@ if ($usertype == 1) {
                     <label class="label" for="show-password">Show password</label>
                     <input class="form-check-input" type="checkbox" id="show-password">
                 </div>
-                <a href="#" class="ongoing-button">Forgot Password?</a>
+                <a href="/MainController/ForgotPassword" class="">Forgot Password?</a>
             </div>
 
             <input type="hidden" name="log_usertype" value="<?= $usertype ?>">

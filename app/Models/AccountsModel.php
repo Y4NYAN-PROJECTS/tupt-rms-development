@@ -269,12 +269,36 @@ class AccountsModel extends Model
         return $employee;
     }
 
+    public function getAccountID($idnumber, $email)
+    {
+        $account = $this->where('id_number', $idnumber)->where('email_address', $email)->first();
+        return $account['account_id'];
+    }
+
     public function checkPassword($accountid, $password)
     {
         $account = $this->find($accountid);
         $accountpassword = $account['password'];
 
         if (password_verify($password, $accountpassword)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkIdNumber($idnumber)
+    {
+        if ($this->where('id_number', $idnumber)->first()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkEmail($idnumber, $email)
+    {
+        if ($this->where('id_number', $idnumber)->where('email_address', $email)->first()) {
             return true;
         } else {
             return false;

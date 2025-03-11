@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\FilesModel;
 use App\Models\FoldersModel;
+use App\Models\PromotionHistoryModel;
 use App\Models\RoleModel;
 use App\Models\AccountsModel;
 use App\Models\DepartmentModel;
@@ -27,6 +28,8 @@ use App\Models\PDSVoluntaryWorkModel;
 use App\Models\PDSWorkExperienceItemsModel;
 use App\Models\PDSWorkExperienceModel;
 use App\Models\PlantillaModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class AdminController extends BaseController
 {
@@ -161,8 +164,12 @@ class AdminController extends BaseController
         $accountsModel = new AccountsModel();
         $visit = $accountsModel->getVisitInformation($accountcode);
 
+        $promotionhistoryModel = new PromotionHistoryModel();
+        $promtionhistories = $promotionhistoryModel->getPromotionHistory($visit['account_id']);
+
         $data = [
-            'visit' => $visit
+            'visit' => $visit,
+            'promtionhistories' => $promtionhistories
         ];
         $data = array_merge($this->data, $data);
         return view('/Admin/Pages/profile-visit', $data);
@@ -2190,6 +2197,36 @@ class AdminController extends BaseController
             's_otptime',
             's_email',
         ]);
+    }
+
+    public function generatePDF()
+    {
+        // Load Dompdf with options
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true); // Enable external image loading
+
+        $dompdf = new Dompdf($options);
+
+        // Prepare data to pass to the view
+        $data = [
+
+        ];
+
+        // Render the HTML template
+        $html = view('/Admin/Print/print-template', $data);
+
+        // Load HTML into Dompdf
+        $dompdf->loadHtml($html);
+
+        // Set paper size and orientation
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the PDF
+        $dompdf->render();
+
+        // Output the PDF for download
+        $dompdf->stream('document.pdf', ['Attachment' => false]);
     }
 
 }

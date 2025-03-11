@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account Approved</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 0px;
+        }
+
+        .header p {
+            font-size: 12px;
+            margin-top: 0px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+
+        .content {
+            background-color: rgba(247, 247, 247, 0.8);
+            /* Light red with transparency */
+            padding: 30px;
+            text-align: center;
+            color: #333;
+        }
+
+        .content h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .content p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #3a3a3a;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #d83434;
+            color: white;
+            font-weight: 600;
+            width: 50%;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .code {
+            background-color: rgba(255, 0, 0, 0.80);
+            padding: 12px;
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 2px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+
+        .btn:hover {
+            background-color: #e60000;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://tupt-rms.com/tup-files/tup-logo-transparent.png" alt="Logo" class="logo">
+            <div>
+                <h3>Technological University of the Philippines - Taguig</h3>
+                <p>G25P+828, Taguig, 1630 Metro Manila</p>
+            </div>
+        </div>
+
+        <!-- BODY CONTENT -->
+        <div class="content">
+            <h1>Verification Code</h1>
+            <p>
+                Please use this <strong>OTP code</strong> to confirm your change of email.
+                This one time password is only available for 5 minutes.
+                If you did not request this OTP, please ignore this email. <br><br>
+                <strong>Your OTP code for verification is:</strong>
+            </p>
+            <div class="code">{{code}}</div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>&copy; 2024 Technological University of the Philippines. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>
