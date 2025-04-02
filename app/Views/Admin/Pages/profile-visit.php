@@ -140,6 +140,7 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="m-0">Promotion History</h4>
+                    <button class="btn btn-primary px-5" type="button" data-bs-toggle="modal" data-bs-target="#newPromotion">Add New</button>
                 </div>
             </div>
 
@@ -150,6 +151,7 @@
                             <tr>
                                 <th>Promoted To</th>
                                 <th>Date Promoted</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -157,12 +159,59 @@
                                 <tr>
                                     <td><?= $promtionhistory['plantilla_title'] ?></td>
                                     <td><?= $promtionhistory['date_promoted'] ?></td>
+                                    <td class="text-center">
+                                        <a href="#" class="avtar avtar-xs btn-link-secondary promotion-delete-button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete" data-promotion-id="<?= $promtionhistory['promotion_history_id'] ?>">
+                                            <i class="ti ti-trash f-20 text-primary"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- [ New Promotion ] -->
+<div class="modal fade" id="newPromotion" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="">
+                    <h3 class="modal-title">Promotion Details</h3>
+                    <small>Fill the data to document promotion.</small>
+                </div>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="/AdminController/SavePromotion" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="prmtn-plantilla">Plantilla Title</label>
+                            <select name="prmtn_plantilla" class="form-control" id="prmtn-plantilla">
+                                <?php foreach ($plantillas as $plantilla): ?>
+                                    <option value="<?= $plantilla['plantilla_id'] ?>"><?= $plantilla['plantilla_title'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="prmtn-date">Date of Appointment</label>
+                            <input type="date" class="form-control" id="prmtn-date" placeholder="Salary" name="prmtn_date" required value="<?= $datenow ?>" />
+                        </div>
+                    </div>
+
+                    <!-- [ Hidden Input/s ] -->
+                    <input type="hidden" name="prmtn_accountid" value="<?= $visit['account_id'] ?>">
+                    <input type="hidden" name="prmtn_accountcode" value="<?= $visit['account_code'] ?>">
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button class="btn px-5 btn-primary" type="submit" data-bs-dismiss="modal">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

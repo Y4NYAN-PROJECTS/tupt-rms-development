@@ -2,18 +2,18 @@
 <html lang="en">
 
 <head>
-    <title>Technological University of the Philippines</title>
+    <title>TUP-Taguig | Employee Record Management System</title>
 
-    <meta charset="UTF-8" /> <!-- Ensures the document uses the UTF-8 character encoding, which supports a wide range of characters, including special characters. -->
-    <meta name="viewport" content="width=device-width, initial-scale=0.8, user-scalable=no, minimal-ui" /> <!-- Adjusts the viewport for better responsiveness and limits user zoom. -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Ensures the page is displayed using the latest rendering engine in Internet Explorer. -->
-    <meta name="description" content="Technological University of the Philippines - Employee Files Management System. Manage employee data with ease and security." /> <!-- Updated description for clarity and to be more engaging (keep it under 160 characters). -->
-    <meta name="keywords" content="Technological University of the Philippines, TUP, Employee Files Management System, TUP RMS, TUP login, employee management system, TUP employee login" /> <!-- Improved keywords, slightly broader to capture a wider audience. -->
-    <meta name="author" content="Roselle Honorio, TUP" /> <!-- Simplified and clearer author meta tag. -->
-    <meta property="og:title" content="TUP - Employee Files Management System" /> <!-- Open Graph title for social sharing. -->
-    <meta property="og:description" content="An efficient and secure Employee Files Management System for TUP. Easy management of employee data." /> <!-- Open Graph description for social sharing. -->
-    <meta property="og:image" content="/tup-files/tup-logo-transparent.png" /> <!-- Open Graph image (replace with an actual image URL). -->
-    <meta property="og:url" content="https://seashell-rail-443729.hostingersite.com" /> <!-- Open Graph URL for sharing on social platforms. -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, user-scalable=no, minimal-ui" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Technological University of the Philippines - Employee Record Management System. Manage employee data with ease and security." />
+    <meta name="keywords" content="Technological University of the Philippines, TUP, Employee Record Management System, TUP RMS, TUP login, employee management system, TUP employee login" />
+    <meta name="author" content="Roselle Honorio, TUP" />
+    <meta property="og:title" content="TUP - Employee Files Management System" />
+    <meta property="og:description" content="An efficient and secure Employee Files Management System for TUP. Easy management of employee data." />
+    <meta property="og:image" content="/tup-files/tup-logo-transparent.png" />
+    <meta property="og:url" content="https://seashell-rail-443729.hostingersite.com" />
 
 
     <!-- [Favicon] icon -->

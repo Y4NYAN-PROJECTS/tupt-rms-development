@@ -187,21 +187,23 @@
 <?php endif; ?>
 
 <script>
-    // [ Feature Ongoing ]
-    document.addEventListener('click', function (event) {
-        if (event.target.closest('.ongoing-button')) {
-            const deleteButton = event.target.closest('.ongoing-button');
-            Swal.fire({
-                title: 'Not Available',
-                text: 'This feature is currently under construction.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Okay',
-                cancelButtonText: 'Close',
-                reverseButtons: true
-            })
+    document.addEventListener('DOMContentLoaded', function () {
+        if (document.querySelector('.ongoing-button')) {
+            document.addEventListener('click', function (event) {
+                const deleteButton = event.target.closest('.ongoing-button');
+
+                if (deleteButton) {
+                    Swal.fire({
+                        title: 'Not Available',
+                        text: 'This feature is currently under construction.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Okay',
+                        cancelButtonText: 'Close',
+                        reverseButtons: true
+                    });
+                }
+            });
         }
-    }).then((result) => {
-        if (result.dismiss === Swal.DismissReason.timer) { }
     });
 </script>

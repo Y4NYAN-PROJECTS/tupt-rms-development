@@ -1829,28 +1829,6 @@ class AdminController extends BaseController
         return view('/Admin/Pages/profile', $data);
     }
 
-    public function AccountUpdate()
-    {
-        $rqst_firstname = $this->request->getPost('first_name');
-        $rqst_lastname = $this->request->getPost('last_name');
-        $rqst_middlename = $this->request->getPost('middle_name');
-        $rqst_extension = $this->request->getPost('extension_name');
-        $rqst_accountid = $this->request->getPost('account_id');
-
-        $accountData = [
-            'account_id' => $rqst_accountid,
-            'first_name' => $rqst_firstname,
-            'last_name' => $rqst_lastname,
-            'middle_name' => $rqst_middlename,
-            'extension_name' => $rqst_extension,
-        ];
-        $accountModel = new AccountsModel();
-        $accountModel->save($accountData);
-
-        session()->setFlashdata('alert_updatesuccess', 'Updated!');
-        return redirect()->to('/AdminController/AccountProfilPage');
-    }
-
     public function UpdateProfile()
     {
         $rqst = $this->request->getPost();
@@ -2003,6 +1981,35 @@ class AdminController extends BaseController
         }
 
         return redirect()->to('/AdminController/AccountProfilePage');
+    }
+
+    public function SavePromotion()
+    {
+        $rqst_accountid = $this->request->getPost('prmtn_accountid');
+        $rqst_accountcode = $this->request->getPost('prmtn_accountcode');
+        $rqst_plantilla = $this->request->getPost('prmtn_plantilla');
+        $rqst_date = $this->request->getPost('prmtn_date');
+
+        $promotionhistoryModel = new PromotionHistoryModel();
+        $promotiondata = [
+            'account_id' => $rqst_accountid,
+            'plantilla_id' => $rqst_plantilla,
+            'date_promoted' => $rqst_date
+        ];
+        $promotionhistoryModel->insert($promotiondata);
+
+        session()->setFlashdata('alert_insertsuccess', 'Saved!');
+        return redirect()->to("/AdminController/ProfileVisit/$rqst_accountcode");
+    }
+
+    public function DeletePromotion()
+    {
+        $rqst_promotionid = $this->request->getPost('promotion_id');
+
+        $promotionhistoryModel = new PromotionHistoryModel();
+        $promotionhistoryModel->delete($rqst_promotionid);
+
+        return $this->response->setJSON(['success' => true]);
     }
 
     public function ChangePassword()
