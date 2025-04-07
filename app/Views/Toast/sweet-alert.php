@@ -186,6 +186,29 @@
     <?php session()->remove('alert_failed'); ?>
 <?php endif; ?>
 
+<?php if (!empty(session()->get('alert_failedpromotion'))): ?>
+    <script>
+        const sessionMessage = "<?= session()->get('alert_failedpromotion'); ?>";
+        let timerInterval;
+        Swal.fire({
+            icon: 'error',
+            title: sessionMessage,
+            html: 'Promotion on this date already exists!',
+
+            showCancelButton: false,
+            showDenyButton: false,
+            confirmButtonText: 'Continue',
+            denyButtonText: 'Cancel',
+
+            ...timerConfig
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) { }
+        });
+    </script>
+
+    <?php session()->remove('alert_failedpromotion'); ?>
+<?php endif; ?>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         if (document.querySelector('.ongoing-button')) {

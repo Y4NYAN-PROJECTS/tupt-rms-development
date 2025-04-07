@@ -175,6 +175,11 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-12">
+                        <!-- [ Promotion Table ] -->
+                        <?= $this->include('/Admin/Pages/Partials/promotion-table.php'); ?>
+                    </div>
                 </div>
             </div>
 
@@ -527,6 +532,9 @@
         </div>
     </div>
 </div>
+
+<!-- [ Promotion Modal ] -->
+<?= $this->include('/Admin/Pages/Partials/promotion-modal.php'); ?>
 
 <script>
     // Register plugins

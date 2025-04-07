@@ -28,9 +28,9 @@
         <div class="col-12">
             <div class="card table-card">
                 <div class="card-header">
-                    <div class="d-sm-flex align-items-center justify-content-between">
+                    <div class="d-sm-flex align-items-sm-center justify-content-sm-between text-center">
                         <h4 class="mb-3 mb-sm-0">List of Role/s</h4>
-                        <a href="#" class="btn px-5 btn-primary" data-bs-toggle="modal" data-bs-target="#newRole">
+                        <a href="#" class="btn px-sm-5 btn-primary" data-bs-toggle="modal" data-bs-target="#newRole">
                             Create New
                         </a>
                     </div>

@@ -38,6 +38,10 @@ class AdminController extends BaseController
         return view('/Admin/Pages/dashboard', $this->data);
     }
 
+    public function AccountsCreatePage()
+    {
+        return view('/Admin/Pages/accounts-create', $this->data);
+    }
 
     public function AccountsRequestPage()
     {
@@ -89,36 +93,34 @@ class AdminController extends BaseController
         $rqst_employeetypeid = $this->request->getPost('admn_employeetype');
         $rqst_departmentid = $this->request->getPost('admn_department');
         $rqst_usertype = $this->request->getPost('admn_usertype');
-        $rqst_plantillaid = $this->request->getPost('admn_plantilla');
         $rqst_accountid = $this->request->getPost('admn_accountid');
+        // $rqst_plantillaid = $this->request->getPost('admn_plantilla');
 
-        // New ID Number
         $accountsModel = new AccountsModel();
         $account = $accountsModel->find($rqst_accountid);
 
-        $plantillaModel = new PlantillaModel();
-        $plantilla = $plantillaModel->find($rqst_plantillaid);
-        $plantillatitlecode = $plantilla['plantilla_titlecode'];
-
         // New ID Number
-        $currentidnumber = explode('-', $account['id_number']);
-        $wordcount = 0;
-        foreach ($currentidnumber as $segment) {
-            if (preg_match('/[a-zA-Z]/', $segment)) {
-                $wordcount++;
-            }
-        }
-        $numbers = array_slice($currentidnumber, $wordcount);
-        $numericPart = implode('-', $numbers);
-        $idnumber = $plantillatitlecode . '-' . $numericPart;
+        // $plantillaModel = new PlantillaModel();
+        // $plantilla = $plantillaModel->find($rqst_plantillaid);
+        // $plantillatitlecode = $plantilla['plantilla_titlecode'];
+
+        // // New ID Number
+        // $currentidnumber = explode('-', $account['id_number']);
+        // $wordcount = 0;
+        // foreach ($currentidnumber as $segment) {
+        //     if (preg_match('/[a-zA-Z]/', $segment)) {
+        //         $wordcount++;
+        //     }
+        // }
+        // $numbers = array_slice($currentidnumber, $wordcount);
+        // $numericPart = implode('-', $numbers);
+        // $idnumber = $plantillatitlecode . '-' . $numericPart;
 
         $accountdata = [
             'account_id' => $rqst_accountid,
-            'id_number' => $idnumber,
             'role_id' => $rqst_roleid,
             'employee_type_id' => $rqst_employeetypeid,
             'department_id' => $rqst_departmentid,
-            'plantilla_id' => $rqst_plantillaid,
             'user_type' => $rqst_usertype,
         ];
         $accountsModel = new AccountsModel();
@@ -165,11 +167,13 @@ class AdminController extends BaseController
         $visit = $accountsModel->getVisitInformation($accountcode);
 
         $promotionhistoryModel = new PromotionHistoryModel();
-        $promtionhistories = $promotionhistoryModel->getPromotionHistory($visit['account_id']);
+        $promotionhistories = $promotionhistoryModel->getPromotionHistory($visit['account_id']);
 
         $data = [
             'visit' => $visit,
-            'promtionhistories' => $promtionhistories
+            'promotion_accountid' => $visit['account_id'],
+            'promotion_accountcode' => $visit['account_code'],
+            'promotion_histories' => $promotionhistories
         ];
         $data = array_merge($this->data, $data);
         return view('/Admin/Pages/profile-visit', $data);
@@ -224,32 +228,45 @@ class AdminController extends BaseController
     public function SendEmail($account_id, $status)
     {
         $accountsModel = new AccountsModel();
-        $account = $accountsModel->where('account_id', $account_id)->first();
+        $account = $accountsModel->getUserInformation($account_id);
         $email = $account['email_address'];
+        $plantilla = $account['plantilla_title'];
+        $idnumber = $account['id_number'];
 
         switch ($status) {
             case 2:
                 $template = 'request-approved.html';
+                $emailsubject = 'Registration Request Status';
                 break;
             case 3:
                 $template = 'request-declined.html';
+                $emailsubject = 'Registration Request Status';
+                break;
+            case 4:
+                $template = 'promotion-idnumber.html';
+                $emailsubject = '[Promoted] Congratulations!';
+                $ispromotion = true;
                 break;
         }
-        $emailsubject = 'Registration Request Status';
         $templatePath = APPPATH . "/Views/EmailTemplates/$template";
         $emailmessage = file_get_contents($templatePath);
+
+        if (isset($ispromotion) && $ispromotion) {
+            $emailmessage = str_replace('{{plantilla}}', $plantilla, $emailmessage);
+            $emailmessage = str_replace('{{idnumber}}', $idnumber, $emailmessage);
+        }
 
         $emailService = \Config\Services::email();
         $emailService->setTo($email);
         $emailService->setSubject($emailsubject);
         $emailService->setMessage($emailmessage);
-        if ($emailService->send()) {
-            echo "sent";
-            exit;
-        } else {
-            echo "failed";
-            exit;
-        }
+        // if ($emailService->send()) {
+        //     echo "sent";
+        //     exit;
+        // } else {
+        //     echo "failed";
+        //     exit;
+        // }
     }
 
     public function PDSPrintPage()
@@ -1818,11 +1835,19 @@ class AdminController extends BaseController
             }
         }
 
+        $promotionhistoryModel = new PromotionHistoryModel();
+        $promtionhistories = $promotionhistoryModel->getPromotionHistory($this->accountid);
+
         $data = [
             'tab' => $tab,
             'oldinput' => $oldinput,
             'validation' => $validation,
             'form' => $form,
+
+            // Promotion
+            'promotion_accountid' => $this->accountid,
+            'promotion_accountcode' => $this->data['user']['account_code'],
+            'promotion_histories' => $promtionhistories
         ];
         $data = array_merge($this->data, $data);
 
@@ -1988,26 +2013,83 @@ class AdminController extends BaseController
         $rqst_accountid = $this->request->getPost('prmtn_accountid');
         $rqst_accountcode = $this->request->getPost('prmtn_accountcode');
         $rqst_plantilla = $this->request->getPost('prmtn_plantilla');
+        $rqst_idnumber = $this->request->getPost('prmtn_fullidnumber');
         $rqst_date = $this->request->getPost('prmtn_date');
+
+        if ($this->CheckPromotion($rqst_accountid, $rqst_date)) {
+            session()->setFlashdata('alert_failedpromotion', 'Failed!');
+            return redirect()->to("/AdminController/ProfileVisit/$rqst_accountcode");
+        }
 
         $promotionhistoryModel = new PromotionHistoryModel();
         $promotiondata = [
             'account_id' => $rqst_accountid,
             'plantilla_id' => $rqst_plantilla,
-            'date_promoted' => $rqst_date
+            'id_number' => $rqst_idnumber,
+            'date_promoted' => $rqst_date,
+            'status' => 0
         ];
         $promotionhistoryModel->insert($promotiondata);
 
+        $this->UpdateLatestPromotion($rqst_accountid);
+
         session()->setFlashdata('alert_insertsuccess', 'Saved!');
-        return redirect()->to("/AdminController/ProfileVisit/$rqst_accountcode");
+        return redirect()->back();
     }
+
+    private function UpdateLatestPromotion($accountid)
+    {
+        $promotionhistoryModel = new PromotionHistoryModel();
+        $userhistory = $promotionhistoryModel->where('account_id', $accountid)->orderBy('date_promoted', 'DESC')->findAll();
+
+        if (empty($userhistory)) {
+            return;
+        }
+
+        // Reset all rows status
+        $promotionhistoryModel->where('account_id', $accountid)->set(['promotion_status' => 0])->update();
+
+        // Update latest promotion row status
+        $latestPromotion = $userhistory[0];
+        $promotionhistoryModel->update($latestPromotion['promotion_history_id'], ['promotion_status' => 1]);
+
+        $accountsModel = new AccountsModel();
+        $useraccount = $accountsModel->find($accountid);
+
+        // Update account idnumber to promoted id number
+        if ($latestPromotion['id_number'] != $useraccount['id_number']) {
+            $accountsModel->update($accountid, [
+                'id_number' => $latestPromotion['id_number'],
+                'plantilla_id' => $latestPromotion['plantilla_id']
+            ]);
+
+            $this->SendEmail($accountid, 4);
+        }
+    }
+
+
+    private function CheckPromotion($accountid, $datepromoted)
+    {
+        $promotionhistoryModel = new PromotionHistoryModel();
+        $isexisting = $promotionhistoryModel->where('account_id', $accountid)->where('date_promoted', $datepromoted)->first();
+
+        if ($isexisting) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public function DeletePromotion()
     {
         $rqst_promotionid = $this->request->getPost('promotion_id');
+        $rqst_accountid = $this->request->getPost('account_id');
 
         $promotionhistoryModel = new PromotionHistoryModel();
         $promotionhistoryModel->delete($rqst_promotionid);
+
+        $this->UpdateLatestPromotion($rqst_accountid);
 
         return $this->response->setJSON(['success' => true]);
     }
@@ -2144,7 +2226,7 @@ class AdminController extends BaseController
 
 
     // [ More Functions ]
-    public function GenerateCode()
+    private function GenerateCode()
     {
         $length = 12;
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -2157,7 +2239,7 @@ class AdminController extends BaseController
         return $code;
     }
 
-    public function LogComplete($logid)
+    private function LogComplete($logid)
     {
         $logsModel = new LogsModel();
         $logsModel->update($logid, ['is_complete' => 1]);

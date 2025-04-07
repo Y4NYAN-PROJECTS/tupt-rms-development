@@ -465,9 +465,11 @@
     document.addEventListener('click', function (event) {
         if (event.target.closest('.promotion-delete-button')) {
             const deleteButton = event.target.closest('.promotion-delete-button');
-            const deleteID = deleteButton.dataset.promotionId;
+            const promotionId = deleteButton.dataset.promotionId;
+            const accountId = deleteButton.dataset.accountId;
 
-            console.log('promotion id:' + deleteID);
+            console.log('promotion id:' + promotionId);
+            console.log('account id:' + accountId);
 
             Swal.fire({
                 title: 'Confirm Delete!',
@@ -484,7 +486,8 @@
                             url: '/AdminController/DeletePromotion',
                             type: 'POST',
                             data: {
-                                promotion_id: deleteID
+                                promotion_id: promotionId,
+                                account_id: accountId
                             },
 
                             success: function (response) {

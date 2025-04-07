@@ -106,6 +106,7 @@
                     </a>
 
                     <ul class="pc-submenu">
+                        <li class="pc-item"><a class="pc-link" href="/AdminController/AccountsCreatePage">Create Account</a></li>
                         <li class="pc-item"><a class="pc-link" href="/AdminController/AccountsRequestPage">Pending Request</a></li>
                         <li class="pc-item"><a class="pc-link" href="/AdminController/AccountsAdministratorPage">Administrators</a></li>
                         <li class="pc-item"><a class="pc-link" href="/AdminController/AccountsEmployeePage">Employees</a></li>
