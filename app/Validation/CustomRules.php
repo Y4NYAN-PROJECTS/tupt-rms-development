@@ -23,8 +23,8 @@ class CustomRules
     public function idnumberCheck(string $str, string $idnumber, array $data): bool
     {
         $accountsModel = new AccountsModel();
-        $isidnumberExsist = $accountsModel->checkIdNumber($idnumber);
-        return $isidnumberExsist;
+        $isexisting = $accountsModel->checkIdNumber($idnumber);
+        return $isexisting;
     }
 
     public function emailCheck(string $str, string $params, array $data): bool
@@ -38,6 +38,18 @@ class CustomRules
         $accountsModel = new AccountsModel();
         $iscorrectEmail = $accountsModel->checkEmail($idnumber, $email);
         return $iscorrectEmail;
+    }
+
+    public function idnumberExist(string $str, string $idnumber, array $data): bool
+    {
+        $accountsModel = new AccountsModel();
+        $check = $accountsModel->checkIdNumber($idnumber);
+
+        if ($check) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

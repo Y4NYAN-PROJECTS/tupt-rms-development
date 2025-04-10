@@ -7,6 +7,9 @@
     <title>Account Approved</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
+
+
 
         body {
             font-family: 'Manrope', sans-serif;
@@ -37,7 +40,8 @@
         }
 
         .content {
-            background-color: rgba(247, 247, 247, 0.8); /* Light red with transparency */
+            background-color: rgba(247, 247, 247, 0.8);
+            /* Light red with transparency */
             padding: 30px;
             text-align: center;
             color: #333;
@@ -51,7 +55,7 @@
         }
 
         .content p {
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.6;
             color: #3a3a3a;
         }
@@ -69,6 +73,20 @@
             margin-top: 20px;
             transition: background 0.3s ease;
         }
+
+        .code {
+            font-family: 'Inconsolata', monospace;
+            background-color: rgba(255, 0, 0, 0.80);
+            padding: 12px;
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 2px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
 
         .btn:hover {
             background-color: #e60000;
@@ -93,13 +111,18 @@
 
         <!-- BODY CONTENT -->
         <div class="content">
-            <h1>Account Approved ✅</h1>
+            <h1>Account Created ✅</h1>
             <p>
-                Dear User, <br><br>
-                Your registration request has been approved by the administrator.
-                You can now log in to <strong>TUPT RMS</strong> and access your account!
+                Welcome to TUP Taguig - Record Management System, You can log in as {{usertype}}. 
+                <strong>Your temporary password is generated using the first letter of your first name 
+                combined with your last name <i>(e.g., JDelaCruz).</i></strong>
+                We recommend updating your password immediately. To do so, please log in and navigate to 
+                Profile > My Account > Change Password.
             </p>
+            <p><strong>You can login using this ID Number:</strong></p>
+            <div class="code">{{idnumber}}</div>
             <a href="https://tupt-rms.com" class="btn">Login Now</a>
+            <p>For security, please do not share this email with anyone.</p>
         </div>
 
         <!-- FOOTER -->

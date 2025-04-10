@@ -32,11 +32,35 @@
                     <p class="mb-4">Direct account registration</p>
                 </div>
 
-                <form action="#" method="post" id="regsiter-form">
+                <form action="/AdminController/SaveRegistration" method="post" id="regsiter-form">
                     <div class="row">
                         <div class="d-sm-flex align-items-sm-center justify-content-sm-center">
                             <div class="col-sm-12 col-md-8 col-lg-6">
                                 <div class="row">
+                                    <!-- [ Hidden Input ] -->
+                                    <input type="hidden" id="idnumber-hidden" name="reg_fullidnumber" />
+
+                                    <div class="col-12">
+                                        <?php
+                                        $isadmin = isset($oldinput) ?? $oldinput['reg_usertype'] == 1 ? true : false;
+                                        $isemployee = isset($oldinput) ?? $oldinput['reg_usertype'] == 2 ? true : false;
+                                        ?>
+                                        <div class="mb-3">
+                                            <label class="form-label">User Type</label>
+                                            <select class="form-select <?= isset($validation) && $validation->hasError('reg_usertype') ? 'is-invalid' : '' ?>" name="reg_usertype">
+                                                <option value="">Select User Type</option>
+                                                <option value="1" <?= $isadmin ? 'selected' : '' ?>>Administrator</option>
+                                                <option value="2" <?= $isemployee ? 'selected' : '' ?>>Employee</option>
+                                            </select>
+
+                                            <!-- [ Error Message ] -->
+                                            <?php if (isset($validation) && $validation->hasError('reg_usertype')): ?>
+                                                <div class="invalid-feedback"><?= $validation->getError('reg_usertype') ?></div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+
+
                                     <div class="col-sm-12">
                                         <div class="mb-3">
                                             <label class="form-label">First name</label>
@@ -75,18 +99,26 @@
                                         </div>
                                     </div>
 
+                                    <!-- [ Extentions ] -->
+                                    <?php
+                                    $extensions = ['Jr.', 'Sr.', 'III', 'IV'];
+                                    $selectedExtension = $oldinput['reg_extension'] ?? '';
+                                    ?>
+
                                     <div class="col-sm-4">
                                         <div class="mb-3">
                                             <label class="form-label">Extension name</label>
                                             <select name="reg_extension" id="extension" class="form-control">
                                                 <option value="">N/A</option>
-                                                <option value="Jr.">Jr.</option>
-                                                <option value="Sr.">Sr.</option>
-                                                <option value="III">III</option>
-                                                <option value="IV">IV</option>
+                                                <?php foreach ($extensions as $extension): ?>
+                                                    <option value="<?= $extension ?>" <?= ($selectedExtension === $extension) ? 'selected' : '' ?>>
+                                                        <?= $extension ?>
+                                                    </option>
+                                                <?php endforeach; ?>
                                             </select>
                                         </div>
                                     </div>
+
 
                                     <div class="col-12">
                                         <div class="mb-3">
@@ -165,8 +197,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- [ Hidden Input ] -->
-                                    <input type="hidden" id="idnumber-hidden" name="reg_fullidnumber" />
 
                                     <div class="col-12">
                                         <div class="mb-3">
@@ -216,26 +246,6 @@
             idnumberInput.readOnly = !plantillaCode;
         }
 
-        // For idnumber format
-        // function formatIdNumberInput(event) {
-        //     const plantillaCode = idnumberText.textContent;
-        //     let value = idnumberInput.value.replace(/\D/g, ''); // Remove non-numeric characters
-
-        //     if (value.length > 7) value = value.substring(0, 7); // Limit input to 7 digits
-
-        //     if (value.length === 7) {
-        //         value = value.substring(0, 3) + '-' + value.substring(3);
-        //     } else if (value.length === 6) {
-        //         value = value.substring(0, 2) + '-' + value.substring(2);
-        //     } else if (value.length > 1) {
-        //         value = value.substring(0, 1) + '-' + value.substring(1);
-        //     }
-
-        //     idnumberInput.value = value;
-        //     idnumberHidden.value = plantillaCode && value ? `${plantillaCode}${value}` : `${plantillaCode}`;
-        // }
-
-
         // For restrict key
         function restrictInvalidKeys(event) {
             const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
@@ -247,19 +257,8 @@
         updateIdNumberDisplay();
 
         plantillaSelect.addEventListener('change', updateIdNumberDisplay);
-        // idnumberInput.addEventListener('input', formatIdNumberInput);
+        idnumberInput.addEventListener('input', updateIdNumberDisplay);
         idnumberInput.addEventListener('keydown', restrictInvalidKeys);
-    });
-
-    // [ Password ]
-    document.getElementById('reg-show-password').addEventListener('change', function () {
-        const passwordField = document.getElementById('rgstr-pw');
-        passwordField.type = this.checked ? 'text' : 'password';
-    });
-
-    document.getElementById('reg-show-confirmpassword').addEventListener('change', function () {
-        const passwordField = document.getElementById('rgstr-cpw');
-        passwordField.type = this.checked ? 'text' : 'password';
     });
 </script>
 

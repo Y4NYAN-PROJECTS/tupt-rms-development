@@ -199,6 +199,13 @@ if ($usertype == 1) {
                 </div>
             </div>
 
+            <div class="col-12">
+                <div class="form-check mb-2 d-flex justify-content-center align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="agree" required>
+                    <label class="form-check-label ms-2" for="agree"> I Agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Condition</a> </label>
+                </div>
+            </div>
+
             <input type="hidden" name="reg_usertype" value="<?= $usertype ?>">
 
             <div class="col-12">
@@ -215,6 +222,24 @@ if ($usertype == 1) {
                 <button type="submit" class="border-0 bg-transparent text-primary p-0">Login Now</button>
             </p>
         </form>
+    </div>
+</div>
+
+<div id="termsModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
     </div>
 </div>
 

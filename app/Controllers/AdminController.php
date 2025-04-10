@@ -9,7 +9,6 @@ use App\Models\RoleModel;
 use App\Models\AccountsModel;
 use App\Models\DepartmentModel;
 use App\Models\LogsModel;
-use App\Models\OtpModel;
 use App\Models\PDSCivilServiceItemsModel;
 use App\Models\PDSCivilServiceModel;
 use App\Models\PDSEducationModel;
@@ -41,6 +40,136 @@ class AdminController extends BaseController
     public function AccountsCreatePage()
     {
         return view('/Admin/Pages/accounts-create', $this->data);
+    }
+
+    public function SaveRegistration()
+    {
+        helper('text');
+        helper("custom");
+        $rqst = $this->request->getPost();
+
+        // Get validated data
+        $rqst_department = $this->request->getPost('reg_department');
+        $rqst_employeetype = $this->request->getPost('reg_employeetype');
+        $rqst_plantilla = $this->request->getPost('reg_plantilla');
+        $rqst_firstname = $this->request->getPost('reg_firstname');
+        $rqst_middlename = $this->request->getPost('reg_middlename');
+        $rqst_lastname = $this->request->getPost('reg_lastname');
+        $rqst_extension = $this->request->getPost('reg_extension');
+        $rqst_email = $this->request->getPost('reg_email');
+        $rqst_usertype = $this->request->getPost('reg_usertype');
+        $rqst_fullidnumber = $this->request->getPost('reg_fullidnumber');
+
+        // Helpers
+        $accountcode = random_code(100);
+        $fullname = format_fullname($rqst_firstname, $rqst_middlename, $rqst_lastname, $rqst_extension);
+        $temporarypassword = temporary_password($rqst_firstname, $rqst_lastname);
+
+        $validation = \Config\Services::validation();
+        $validationRules = [
+            'reg_usertype' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select user type.',
+                ],
+            ],
+            'reg_firstname' => [
+                'label' => 'First Name',
+                'rules' => 'required|alpha_space',
+                'errors' => [
+                    'required' => 'First name is required.',
+                    'alpha_space' => 'Cannot contains special characters or numbers.',
+                ],
+            ],
+            'reg_middlename' => [
+                'label' => 'Middle Name',
+                'rules' => 'alpha_space',
+                'errors' => [
+                    'alpha_space' => 'Cannot contains special characters or numbers.',
+                ],
+            ],
+            'reg_lastname' => [
+                'label' => 'Last Name',
+                'rules' => 'required|alpha_space',
+                'errors' => [
+                    'required' => 'Last name is required.',
+                    'alpha_space' => 'Cannot contains special characters or numbers.',
+                ],
+            ],
+            'reg_department' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select your departments.',
+                ],
+            ],
+            'reg_employeetype' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select what type of employee.',
+                ],
+            ],
+            'reg_plantilla' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select your plantilla.',
+                ],
+            ],
+            'reg_idnumber' => [
+                'label' => 'ID Number',
+                'rules' => [
+                    'required',
+                    'idnumberExist[' . $rqst_fullidnumber . ']',
+                ],
+                'errors' => [
+                    'required' => 'Id number is required.',
+                    'idnumberExist' => 'This ID number already exist.'
+                ],
+            ],
+            'reg_email' => [
+                'label' => 'Email',
+                'rules' => 'required|valid_email',
+                'errors' => [
+                    'required' => 'The Email field is required.',
+                    'valid_email' => 'Please enter a valid email address.',
+                ],
+            ],
+        ];
+
+        if (!$this->validate($validationRules)) {
+            $data = [
+                'usertype' => $rqst_usertype,
+                'validation' => $validation,
+                'oldinput' => $rqst,
+            ];
+            $data = array_merge($this->data, $data);
+            return view('/Admin/Pages/accounts-create', $data);
+        }
+
+        $accountsModel = new AccountsModel();
+        $accountsData = [
+            'account_code' => $accountcode,
+            'user_type' => $rqst_usertype,
+            'employee_type_id' => $rqst_employeetype,
+            'department_id' => $rqst_department,
+            'plantilla_id' => $rqst_plantilla,
+            'full_name' => $fullname,
+            'first_name' => strtoupper($rqst_firstname),
+            'middle_name' => strtoupper($rqst_middlename),
+            'last_name' => strtoupper($rqst_lastname),
+            'extension_name' => $rqst_extension,
+            'id_number' => $rqst_fullidnumber,
+            'email_address' => $rqst_email,
+            'password' => $temporarypassword,
+            'status' => 2
+        ];
+        $iscreated = $accountsModel->insert($accountsData);
+        if ($iscreated) {
+            $accountid = $accountsModel->getInsertID();
+            $this->SendEmail($accountid, 5);
+
+            session()->setFlashdata('alert_insertsuccess', 'Account Created');
+            return redirect()->to('/AdminController/AccountsCreatePage');
+        }
     }
 
     public function AccountsRequestPage()
@@ -232,6 +361,8 @@ class AdminController extends BaseController
         $email = $account['email_address'];
         $plantilla = $account['plantilla_title'];
         $idnumber = $account['id_number'];
+        $usertype = $account['user_type'];
+
 
         switch ($status) {
             case 2:
@@ -247,6 +378,12 @@ class AdminController extends BaseController
                 $emailsubject = '[Promoted] Congratulations!';
                 $ispromotion = true;
                 break;
+            case 5:
+                $template = 'account-created.html';
+                $emailsubject = 'Welcome to TUP Taguig RMS';
+                $isaccountcreated = true;
+                $user = $usertype == 1 ? 'Administrator' : 'Employee';
+                break;
         }
         $templatePath = APPPATH . "/Views/EmailTemplates/$template";
         $emailmessage = file_get_contents($templatePath);
@@ -256,15 +393,22 @@ class AdminController extends BaseController
             $emailmessage = str_replace('{{idnumber}}', $idnumber, $emailmessage);
         }
 
+        if (isset($isaccountcreated) && $isaccountcreated) {
+            $emailmessage = str_replace('{{usertype}}', $user, $emailmessage);
+            $emailmessage = str_replace('{{idnumber}}', $idnumber, $emailmessage);
+        }
+
         $emailService = \Config\Services::email();
         $emailService->setTo($email);
         $emailService->setSubject($emailsubject);
         $emailService->setMessage($emailmessage);
+
+        $emailService->send();
         // if ($emailService->send()) {
         //     echo "sent";
         //     exit;
         // } else {
-        //     echo "failed";
+        //     echo $emailService->printDebugger(['headers']);
         //     exit;
         // }
     }
