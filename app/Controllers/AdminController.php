@@ -2432,33 +2432,25 @@ class AdminController extends BaseController
         ]);
     }
 
-    public function generatePDF()
+    public function AnalyticsPDF()
     {
         // Load Dompdf with options
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
-        $options->set('isRemoteEnabled', true); // Enable external image loading
+        $options->set('isRemoteEnabled', true);
 
         $dompdf = new Dompdf($options);
 
-        // Prepare data to pass to the view
         $data = [
-
+            'logo' => base_url('/tup-files/tup-logo-transparent.png'),
         ];
+        $data = array_merge($this->data, $data);
+        $html = view('/Admin/Print/analytics', $data);
 
-        // Render the HTML template
-        $html = view('/Admin/Print/print-template', $data);
-
-        // Load HTML into Dompdf
         $dompdf->loadHtml($html);
-
-        // Set paper size and orientation
         $dompdf->setPaper('A4', 'portrait');
-
-        // Render the PDF
         $dompdf->render();
 
-        // Output the PDF for download
         $dompdf->stream('document.pdf', ['Attachment' => false]);
     }
 
